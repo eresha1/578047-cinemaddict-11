@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Ирина](https://up.htmlacademy.ru/ecmascript/11/user/578047).
-* Наставник: `Неизвестно`.
+* Наставник: [Виталий Комолаев].
 
 ---
 
