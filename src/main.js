@@ -78,17 +78,17 @@ const getMarkupCards = (count) => {
   return markupCards;
 };
 
-const createMainTemplate = () => {
-  const markupMainNavigation = createMainNavigationTemplate();
-  const markupSort = creatSortTemplate();
+const creatFilmsTemplate = () => {
+  // const markupMainNavigation = createMainNavigationTemplate();
+  // const markupSort = creatSortTemplate();
   const markupAllCard = getMarkupCards(CardCount.ALL);
   const markupButtonShowMore = creatButtonShowMoreTemplate();
   const markupExtraCard = getMarkupCards(CardCount.EXTRA);
 
   return (
-    `${markupMainNavigation}
-    ${markupSort}
-    <section class="films">
+    // `${markupMainNavigation}
+    // ${markupSort}
+    `<section class="films">
       <section class="films-list">
         <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
         <div class="films-list__container">
@@ -296,6 +296,8 @@ const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 render(headerElement, createProfileRatingTemplate());
-render(mainElement, createMainTemplate());
+render(mainElement, createMainNavigationTemplate());
+render(mainElement, creatSortTemplate());
+render(mainElement, creatFilmsTemplate());
 render(footerStatisticsElement, creatFooterStatisticsTemplate());
 render(document.body, creatFilmDetailsTemplate());
