@@ -1,5 +1,15 @@
-import {getListCards} from "./film-card-list.js";
+import {generateCard} from './../mock/film.js';
 import {creatButtonShowMoreTemplate} from "./button-show.js";
+import {creatFilmCardTemplate} from "./film-card.js";
+
+const getListCards = (count) => {
+  let listCards = ``;
+  for (let i = 0; i < count; i++) {
+    const film = generateCard();
+    listCards += creatFilmCardTemplate(film);
+  }
+  return listCards;
+};
 
 export const createFilmsListTemplate = (data) => {
   const {title, type, number} = data;
@@ -9,6 +19,7 @@ export const createFilmsListTemplate = (data) => {
   const classTitle = isUpcomingList ? `films-list__title visually-hidden` : `films-list__title`;
   const btnShow = isUpcomingList ? creatButtonShowMoreTemplate() : ``;
   const markupCards = getListCards(number);
+
   return (
     `<section class="${classFilmsList}">
       <h2 class="${classTitle}">
