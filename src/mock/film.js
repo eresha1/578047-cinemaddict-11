@@ -1,14 +1,7 @@
-import {
-  getRandomIntegerNumber,
-  getRandomArrayItem,
-  generateRandomBoolean,
-  getRandomQuantityElements,
-  generateRandomDate
-} from '../random.js';
-import {MinCount, MaxCount} from '../const.js';
-// import {getFormatDate} from './../utils.js';
+import {getRandomIntegerNumber, getRandomArrayItem, generateRandomBoolean, getRandomQuantityElements, generateRandomDate} from '../utils/random.js';
 
-import  {generateComment, generateComments} from '../mock/comment.js';
+import {generateComments} from '../mock/comment.js';
+
 const FILMS = [
   {
     title: `Made for Each Other`,
@@ -54,6 +47,35 @@ const COUNTRIES = [`China`, `Mali`, `United States`, `France`, `China`, `India`,
 
 const AGE_RATINGS = [`0+`, `6+`, `12+`, `16+`, `18+`];
 
+const MinCount = {
+  RATING: 0,
+  HOURS: 1,
+  MINUTES: 0,
+  DESCRIPTION_COUNT: 1,
+  COMMENTS: 1,
+  GENRES: 1,
+  WRITERS: 1,
+  ACTORS: 3
+};
+
+const MaxCount = {
+  RATING: 10,
+  HOURS: 3,
+  MINUTES: 59,
+  DESCRIPTION_COUNT: 12,
+  DESCRIPTION_LENGTH: 140,
+  COMMENTS: 5,
+  GENRES: 4,
+  WRITERS: 4,
+  ACTORS: 5,
+};
+
+const CardCount = {
+  ALL: 22,
+  TOP_RATED: 2,
+  MOST_COMMENTED: 2
+};
+
 const getDuration = () => {
   return `${getRandomIntegerNumber(MinCount.HOURS, MaxCount.HOURS)}h
   ${getRandomIntegerNumber(MinCount.MINUTES, MaxCount.MINUTES)}m`;
@@ -81,14 +103,6 @@ const getGenres = () => {
   return items;
 };
 
-
-// const today = getFormatDate();
-// const randomDay = getRandomIntegerNumber(0, 31);
-// const randomMonths = getRandomIntegerNumber(0, 12);
-// console.log(randomDay)
-// console.log(randomMonths)
-
-
 const generateCard = () => {
   const filmTitlePoster = getRandomArrayItem(FILMS);
   const title = filmTitlePoster.title;
@@ -98,10 +112,7 @@ const generateCard = () => {
   const descriptionFull = getRandomQuantityElements(arrDescriptionFull, MinCount.DESCRIPTION_COUNT, arrDescriptionFull.length, `. `);
   const genres = getGenres(GENRES);
   const commentsCount = getCommentsCount(MinCount.COMMENTS, MaxCount.COMMENTS);
-  // const date = getFormatDate();
-  // const randomYear = getRandomIntegerNumber(date.year - 100, date.year);
-
-const dateRelease = generateRandomDate();
+  const dateRelease = generateRandomDate();
 
   return {
     title,
@@ -109,7 +120,6 @@ const dateRelease = generateRandomDate();
     rating: getRating(MaxCount.RATING),
     poster,
     ageRating: getRandomArrayItem(AGE_RATINGS),
-    // yearRelease: randomYear,
     dateRelease,
     duration: getDuration(),
     genres,
@@ -132,7 +142,4 @@ const generateCards = (count) => {
   return new Array(count).fill(``).map(generateCard);
 };
 
-export {
-  generateCard,
-  generateCards
-};
+export {generateCard, generateCards, MinCount, MaxCount, CardCount};

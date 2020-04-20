@@ -1,12 +1,5 @@
-import {
-  createFilmsListTemplate
-} from "./films-list.js";
-
-const CardCount = {
-  ALL: 5,
-  TOP_RATED: 2,
-  MOST_COMMENTED: 2
-};
+import {createFilmsListTemplate} from "./films-list.js";
+import {CardCount} from "./../mock/film.js";
 
 const filmsSection = [
   {

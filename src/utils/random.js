@@ -17,10 +17,10 @@ const getMixedArray = (arr) => {
   return result;
 };
 
-const getRandomQuantityElements = (elements, min, max, arg) => {
+const getRandomQuantityElements = (elements, min, max, separator) => {
   const arr = elements.slice();
   const newArr = getMixedArray(arr).splice(0, getRandomIntegerNumber(min, max));
-  return newArr.join(arg);
+  return newArr.join(separator);
 };
 
 const generateRandomBoolean = () => Math.random() > 0.5;

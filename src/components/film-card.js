@@ -1,7 +1,3 @@
-// import {generateComment, generateComments} from './../mock/comment.js';
-// import {generateCard} from './../mock/film.js';
-// import { MONTH_NAMES} from './../mock/const.js';
-
 export const creatFilmCardTemplate = (card) => {
   const {title, rating, dateRelease, duration, genreFirst, poster, shortDescription, commentsCount, isAtWatchlist, isFavorite, isWatched} = card;
   const year = dateRelease.getFullYear();

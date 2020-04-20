@@ -1,9 +1,5 @@
-import {
-  getRandomIntegerNumber,
-  getRandomArrayItem
-} from '../random.js';
-
-import {getFormatCommentDate} from '../utils';
+import {getRandomArrayItem} from '../utils/random.js';
+import {getFormatCommentDate} from '../utils/common.js';
 
 const COMMENTS_EMODJIES = [
   `smile`,
@@ -35,7 +31,6 @@ const COMMENTS_TEXTS = [
   `Interesting setting and a good cast`
 ];
 
-
 const generateComment = () => {
   return {
     text: getRandomArrayItem(COMMENTS_TEXTS),
@@ -48,20 +43,5 @@ const generateComment = () => {
 const generateComments = (count) => {
   return new Array(count).fill(``).map(generateComment);
 };
-
-// const generateComments = (countComments) => {
-//   const arrayComments = [];
-//   for (let i = 0; i < countComments; i++) {
-//     arrayComments.push(generateComment());
-//   }
-//   return arrayComments;
-// };
-
-// const generateComments = (count) => {
-//   return new Array(count)
-//     .fill(``)
-//     .map(generateComment);
-// };
-
 
 export {generateComment, generateComments, COMMENTS_EMODJIES};

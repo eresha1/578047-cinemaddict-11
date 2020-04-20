@@ -29,7 +29,6 @@ const createEmojiTemplate = (names) => {
 const createCommentsTemplate = (comments) => {
   return comments.map((comment) => {
     const {text, author, emodjies, date} = comment;
-    // const commentDate = new Intl.DateTimeFormat(`ja-JP`).format(date);
     return (
       `<li class="film-details__comment">
               <span class="film-details__comment-emoji">
@@ -47,7 +46,6 @@ const createCommentsTemplate = (comments) => {
     );
   }).join(`\n`);
 };
-
 
 export const creatFilmDetailsCardTemplate = (bigCard) => {
   const {
@@ -69,9 +67,7 @@ export const creatFilmDetailsCardTemplate = (bigCard) => {
   } = bigCard;
 
   const date = `${dateRelease.getDate()} ${MONTH_NAMES[dateRelease.getMonth()]}`;
-  console.log(date)
   const year = dateRelease.getFullYear();
-  console.log(year)
 
   return (
     `<section class="film-details">

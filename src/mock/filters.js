@@ -1,5 +1,4 @@
 const filterNames = [`All movies`, `Watchlist`, `History`, `Favorites`];
-console.log(filterNames)
 
 const getFilterCount = (name, cards) => {
   switch (name) {
@@ -12,7 +11,6 @@ const getFilterCount = (name, cards) => {
     default: return 0;
   }
 };
-
 
 const generateFilters = (cards) => {
   return filterNames.map((it) => {
