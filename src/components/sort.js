@@ -1,11 +1,12 @@
-export const creatSortTemplate = () => {
-  return (
-    `<ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
-  </ul>`
-  );
+const createSortItem = (title, link, isActive) => {
+  return `<li><a href="#${link}" class="sort__button ${isActive === true ? `sort__button--active` : ``}">${title}</a></li>`;
+};
+
+export const creatSortTemplate = (sort) => {
+  const sortItems = sort.map((it) => createSortItem(it.title, it.link, it.isActive)).join(`\n`);
+  return `<ul class="sort">
+            ${sortItems}
+  </ul>`;
 };
 
 
