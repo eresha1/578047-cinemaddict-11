@@ -5,6 +5,7 @@ import {CardCount, generateCard, generateCards} from './../mock/film.js';
 import {render} from "../utils/render.js";
 
 export const cards = generateCards(CardCount.ALL);
+export const totalWatchedMovies = cards.filter((elem)=> elem.isWatched);
 
 let showingCardsCountCurrent = ShowingCardsCount.ON_START;
 

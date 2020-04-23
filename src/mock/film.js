@@ -50,7 +50,7 @@ const AGE_RATINGS = [`0+`, `6+`, `12+`, `16+`, `18+`];
 const MinCount = {
   RATING: 0,
   HOURS: 1,
-  MINUTES: 0,
+  MINUTES: 70,
   DESCRIPTION_COUNT: 1,
   COMMENTS: 1,
   GENRES: 1,
@@ -61,8 +61,8 @@ const MinCount = {
 const MaxCount = {
   RATING: 10,
   HOURS: 3,
-  MINUTES: 59,
-  DESCRIPTION_COUNT: 12,
+  MINUTES: 200,
+  DESCRIPTION_COUNT: 5,
   DESCRIPTION_LENGTH: 140,
   COMMENTS: 5,
   GENRES: 4,
@@ -77,9 +77,21 @@ const CardCount = {
 };
 
 const getDuration = () => {
-  return `${getRandomIntegerNumber(MinCount.HOURS, MaxCount.HOURS)}h
-  ${getRandomIntegerNumber(MinCount.MINUTES, MaxCount.MINUTES)}m`;
+  return getRandomIntegerNumber(MinCount.MINUTES, MaxCount.MINUTES);
 };
+
+// const getFormatDuration = () => {
+//   const duration = getDuration()
+//   const hours = Math.floor(duration / 60);
+//   const minutes = duration % 60;
+//   return `${hours}h ${minutes}m`;
+// };
+
+// const getDuration = () => {
+//   return `${getRandomIntegerNumber(MinCount.HOURS, MaxCount.HOURS)}h
+//   ${getRandomIntegerNumber(MinCount.MINUTES, MaxCount.MINUTES)}m`;
+// };
+
 
 const getShortDescription = (text) => {
   return text.length <= MaxCount.DESCRIPTION_LENGTH ? text :
@@ -142,4 +154,4 @@ const generateCards = (count) => {
   return new Array(count).fill(``).map(generateCard);
 };
 
-export {generateCard, generateCards, MinCount, MaxCount, CardCount};
+export {generateCard, generateCards, MinCount, MaxCount, CardCount, GENRES};
