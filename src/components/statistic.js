@@ -1,4 +1,5 @@
 import {convertHours, convertMinutes} from "../utils/common.js";
+import {createElement} from '../utils/render.js';
 
 export const createStatisticTemplate = (stats) => {
   const {rank, totalMovies, totalDuration, topGenre} = stats;
@@ -52,3 +53,22 @@ export const createStatisticTemplate = (stats) => {
   </section>`
   );
 };
+
+export default class Statistic {
+  constructor(stats) {
+    this._stats = stats;
+    this._element = null;
+  }
+  getTemplate() {
+    return createStatisticTemplate(this._stats);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

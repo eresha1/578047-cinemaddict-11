@@ -1,6 +1,7 @@
 import {MONTH_NAMES} from '../const.js';
 import {COMMENTS_EMODJIES} from './../mock/comment.js';
 import {getFormatDuration} from '../utils/common.js';
+import {createElement} from '../utils/render.js';
 
 const createGenresTemplate = (genres) => {
   return genres.map((genre) => {
@@ -48,7 +49,7 @@ const createCommentsTemplate = (comments) => {
   }).join(`\n`);
 };
 
-export const creatFilmDetailsCardTemplate = (bigCard) => {
+const creatFilmDetailsCardTemplate = (bigCard) => {
   const {
     title,
     originalTitle,
@@ -179,3 +180,22 @@ export const creatFilmDetailsCardTemplate = (bigCard) => {
   </section>`
   );
 };
+
+export default class FilmDetails {
+  constructor(bigCard) {
+    this._bigCard = bigCard;
+    this._element = null;
+  }
+  getTemplate() {
+    return creatFilmDetailsCardTemplate(this._bigCard);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

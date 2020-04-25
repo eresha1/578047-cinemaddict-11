@@ -1,5 +1,6 @@
 import {createFilmsListTemplate} from "./films-list.js";
 import {CardCount} from "./../mock/film.js";
+import {createElement} from '../utils/render.js';
 
 const filmsSection = [
   {
@@ -27,8 +28,26 @@ const createBlockFilmCards = (block) => {
   return blockFilmCard;
 };
 
-export const createTemplateContent = () => {
+const createTemplateContent = () => {
   return `<section class="films">
     ${createBlockFilmCards(filmsSection)}
   </section>`;
 };
+
+export default class Films {
+  constructor() {
+    this._element = null;
+  }
+  getTemplate() {
+    return createTemplateContent();
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

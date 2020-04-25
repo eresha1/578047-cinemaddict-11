@@ -1,8 +1,8 @@
-import {creatButtonShowMoreTemplate} from "./button-show.js";
-import {creatFilmCardTemplate} from "./film-card.js";
+import ShowMoreButtonComponent from "./button-show.js";
+import FilmCardComponent from "./film-card.js";
 import {ShowingCardsCount} from "./../const.js";
 import {CardCount, generateCard, generateCards} from './../mock/film.js';
-import {render} from "../utils/render.js";
+import {render, createElement} from '../utils/render.js';
 
 export const cards = generateCards(CardCount.ALL);
 export const totalWatchedMovies = cards.filter((elem)=> elem.isWatched);
@@ -38,7 +38,7 @@ const getListCards = (count, start) => {
   return listCards;
 };
 
-export const createFilmsListTemplate = (data) => {
+const createFilmsListTemplate = (data) => {
   const {title, type, number} = data;
   const isUpcomingList = type === `upcoming`;
   const classFilmsList = isUpcomingList ? `films-list` : `films-list--extra`;
@@ -59,3 +59,22 @@ export const createFilmsListTemplate = (data) => {
     </section>`
   );
 };
+
+export default class FilmList {
+  constructor(data) {
+    this._data = data;
+    this._element = null;
+  }
+  getTemplate() {
+    return createFilmsListTemplate(this._data);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}
