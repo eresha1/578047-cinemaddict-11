@@ -70,11 +70,11 @@ const MaxCount = {
   ACTORS: 5,
 };
 
-const CardCount = {
-  ALL: 22,
-  TOP_RATED: 2,
-  MOST_COMMENTED: 2
-};
+// const CardCount = {
+//   ALL: 22,
+//   TOP_RATED: 2,
+//   MOST_COMMENTED: 2
+// };
 
 const getDuration = () => {
   return getRandomIntegerNumber(MinCount.MINUTES, MaxCount.MINUTES);
@@ -154,4 +154,4 @@ const generateCards = (count) => {
   return new Array(count).fill(``).map(generateCard);
 };
 
-export {generateCard, generateCards, MinCount, MaxCount, CardCount, GENRES};
+export {generateCard, generateCards, MinCount, MaxCount, GENRES};

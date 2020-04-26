@@ -1,4 +1,4 @@
-const generateSort = () => {
+const generateSorting = () => {
   return [
     {
       title: `Sort by default`,
@@ -16,4 +16,4 @@ const generateSort = () => {
   ];
 };
 
-export {generateSort};
+export {generateSorting};
