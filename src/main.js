@@ -120,12 +120,16 @@ renderListCard(listComponent, cards);
 const listTopRatedComponent = new FilmsListComponent(`--extra`, `Top rated`);
 render(filmsContainer, listTopRatedComponent.getElement(), RenderPosition.BEFOREEND);
 
-renderListExtra(listTopRatedComponent, topRatedMovies);
+if (topRatedMovies.length > 0) {
+  renderListExtra(listTopRatedComponent, topRatedMovies);
+}
 
 const listCommentedComponent = new FilmsListComponent(`--extra`, `Most commented`);
 render(filmsContainer, listCommentedComponent.getElement(), RenderPosition.BEFOREEND);
 
-renderListExtra(listCommentedComponent, mostCommentedMovies);
+if (mostCommentedMovies.length > 0) {
+  renderListExtra(listCommentedComponent, mostCommentedMovies);
+}
 
 render(footerStatisticsElement, new FooterStatisticsComponent(moviesInside).getElement(), RenderPosition.BEFOREEND);
 
