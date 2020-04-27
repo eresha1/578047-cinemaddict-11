@@ -9,14 +9,15 @@ import FilmsComponent from './components/films.js';
 import FilmDetailsComponent from './components/film-details.js';
 import ShowMoreButtonComponent from './components/button-show.js';
 
-import {generateFilters} from './mock/filters.js';
-import {generateSorting} from './mock/sorting.js';
-import {generateStatistics} from './mock/statistic.js';
+import {generateFilters} from './utils/filters.js';
+import {generateSorting} from './utils/sorting.js';
+import {generateStatistics} from './utils/statistic.js';
 import {render, RenderPosition} from './utils/render.js';
 import {CardCount, ShowingCardsCount} from './utils/../const.js';
 
-import {getRandomIntegerNumber} from './utils/random.js';
 import {generateCards} from './mock/film.js';
+import {getTopRatedMovies} from './utils/extra-block.js';
+import {getMostCommentedMovies} from './utils/extra-block.js';
 
 const cards = generateCards(CardCount.ALL);
 const filters = generateFilters(cards);
@@ -24,6 +25,8 @@ const moviesInside = cards.length;
 const sort = generateSorting();
 const stats = generateStatistics(cards);
 const userRank = stats.rank;
+const mostCommentedMovies = getMostCommentedMovies(cards);
+const topRatedMovies = getTopRatedMovies(cards);
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -98,11 +101,9 @@ const renderListCard = (listComponent, films) => {
 };
 
 const renderListExtra = (listExtraComponent, films) => {
-
   const cardListExtraElement = listExtraComponent.getElement().querySelector(`.films-list__container`);
-  let tempNumber = getRandomIntegerNumber(1, cards.length - 2);
   let showingCardsCount = ShowingCardsCount.EXTRA_MOVIE_CARD;
-  films.slice().splice(tempNumber, showingCardsCount)
+  films.slice(0, showingCardsCount)
     .forEach((card) => {
       renderCard(cardListExtraElement, card);
     });
@@ -119,12 +120,12 @@ renderListCard(listComponent, cards);
 const listTopRatedComponent = new FilmsListComponent(`--extra`, `Top rated`);
 render(filmsContainer, listTopRatedComponent.getElement(), RenderPosition.BEFOREEND);
 
-renderListExtra(listTopRatedComponent, cards);
+renderListExtra(listTopRatedComponent, topRatedMovies);
 
 const listCommentedComponent = new FilmsListComponent(`--extra`, `Most commented`);
 render(filmsContainer, listCommentedComponent.getElement(), RenderPosition.BEFOREEND);
 
-renderListExtra(listCommentedComponent, cards);
+renderListExtra(listCommentedComponent, mostCommentedMovies);
 
 render(footerStatisticsElement, new FooterStatisticsComponent(moviesInside).getElement(), RenderPosition.BEFOREEND);
 
