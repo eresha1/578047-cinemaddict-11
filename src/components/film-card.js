@@ -1,13 +1,14 @@
 import {getFormatDuration} from '../utils/common.js';
+import {createElement} from '../utils/render.js';
 
-export const creatFilmCardTemplate = (card) => {
+const creatFilmCardTemplate = (card) => {
   const {title, rating, dateRelease, duration, genreFirst, poster, shortDescription, commentsCount, isAtWatchlist, isFavorite, isWatched} = card;
   const year = dateRelease.getFullYear();
   const formatDuration = getFormatDuration(duration);
+
   const isActive = (status) => {
     return status ? `film-card__controls-item--active` : ``;
   };
-
   return (
     `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
@@ -28,3 +29,22 @@ export const creatFilmCardTemplate = (card) => {
   </article>`
   );
 };
+
+export default class FilmCard {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+  getTemplate() {
+    return creatFilmCardTemplate(this._card);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}
