@@ -1,5 +1,6 @@
 import FooterStatisticsComponent from './components/footer-statistics.js';
 import MainNavigationComponent from './components/main-navigation.js';
+import NoFilmsComponent from './components/no-films.js';
 import ProfileRatingComponent from './components/profile-rating.js';
 import SortingComponent from './components/sorting.js';
 import StatisticComponent from './components/statistic.js';
@@ -34,10 +35,10 @@ const footerElement = document.querySelector(`.footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 render(headerElement, new ProfileRatingComponent(userRank).getElement(), RenderPosition.BEFOREEND);
-
 render(mainElement, new MainNavigationComponent(filters).getElement(), RenderPosition.BEFOREEND);
 render(mainElement, new SortingComponent(sort).getElement(), RenderPosition.BEFOREEND);
 render(mainElement, new StatisticComponent(stats).getElement(), RenderPosition.AFTERBEGIN);
+
 
 const renderCard = (filmListElement, film) => {
 
@@ -76,6 +77,7 @@ const renderCard = (filmListElement, film) => {
 };
 
 const renderListCard = (listComponent, films) => {
+
   const filmListElement = listComponent.getElement().querySelector(`.films-list__container`);
 
   let showingCardsCount = ShowingCardsCount.ON_START;
@@ -109,23 +111,36 @@ const renderListExtra = (listExtraComponent, films) => {
     });
 };
 
-render(mainElement, new FilmsComponent().getElement(), RenderPosition.BEFOREEND);
 
+render(mainElement, new FilmsComponent().getElement(), RenderPosition.BEFOREEND);
 const filmsContainer = mainElement.querySelector(`.films`);
 
-const listComponent = new FilmsListComponent();
-render(filmsContainer, listComponent.getElement(), RenderPosition.BEFOREEND);
-renderListCard(listComponent, cards);
 
-const listTopRatedComponent = new FilmsListComponent(`--extra`, `Top rated`);
-render(filmsContainer, listTopRatedComponent.getElement(), RenderPosition.BEFOREEND);
+const renderFilmsContent = () => {
+  if (cards.length === 0) {
+    render(filmsContainer, new NoFilmsComponent().getElement(), RenderPosition.BEFOREEND);
+    return;
+  }
+  const listComponent = new FilmsListComponent();
+  render(filmsContainer, listComponent.getElement(), RenderPosition.BEFOREEND);
+  renderListCard(listComponent, cards);
 
-renderListExtra(listTopRatedComponent, topRatedMovies);
+  const listTopRatedComponent = new FilmsListComponent(`--extra`, `Top rated`);
+  render(filmsContainer, listTopRatedComponent.getElement(), RenderPosition.BEFOREEND);
 
-const listCommentedComponent = new FilmsListComponent(`--extra`, `Most commented`);
-render(filmsContainer, listCommentedComponent.getElement(), RenderPosition.BEFOREEND);
+  if (topRatedMovies.length > 0) {
+    renderListExtra(listTopRatedComponent, topRatedMovies);
+  }
 
-renderListExtra(listCommentedComponent, mostCommentedMovies);
+  const listCommentedComponent = new FilmsListComponent(`--extra`, `Most commented`);
+  render(filmsContainer, listCommentedComponent.getElement(), RenderPosition.BEFOREEND);
+
+  if (mostCommentedMovies.length > 0) {
+    renderListExtra(listCommentedComponent, mostCommentedMovies);
+  }
+};
+
+renderFilmsContent();
 
 render(footerStatisticsElement, new FooterStatisticsComponent(moviesInside).getElement(), RenderPosition.BEFOREEND);
 
