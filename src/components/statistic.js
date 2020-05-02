@@ -1,5 +1,5 @@
 import {convertHours, convertMinutes} from "../utils/common.js";
-import {createElement} from '../utils/render.js';
+import AbstractComponent from "./abstract-component.js";
 
 export const createStatisticTemplate = (stats) => {
   const {rank, totalMovies, totalDuration, topGenre} = stats;
@@ -54,21 +54,12 @@ export const createStatisticTemplate = (stats) => {
   );
 };
 
-export default class Statistic {
+export default class Statistic extends AbstractComponent {
   constructor(stats) {
+    super();
     this._stats = stats;
-    this._element = null;
   }
   getTemplate() {
     return createStatisticTemplate(this._stats);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }

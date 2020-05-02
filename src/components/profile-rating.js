@@ -1,4 +1,4 @@
-import {createElement} from '../utils/render.js';
+import AbstractComponent from "./abstract-component.js";
 
 const createProfileRatingTemplate = (rank) => {
   return (
@@ -9,21 +9,12 @@ const createProfileRatingTemplate = (rank) => {
   );
 };
 
-export default class ProfileRating {
+export default class ProfileRating extends AbstractComponent {
   constructor(rank) {
+    super();
     this._rank = rank;
-    this._element = null;
   }
   getTemplate() {
     return createProfileRatingTemplate(this._rank);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }
