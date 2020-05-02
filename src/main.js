@@ -1,26 +1,18 @@
 import FooterStatisticsComponent from './components/footer-statistics.js';
 import MainNavigationComponent from './components/main-navigation.js';
-import NoFilmsComponent from './components/no-films.js';
 import ProfileRatingComponent from './components/profile-rating.js';
 import SortingComponent from './components/sorting.js';
 import StatisticComponent from './components/statistic.js';
-import FilmCardComponent from './components/film-card.js';
-import FilmsListComponent from './components/films-list.js';
 import FilmsComponent from './components/films.js';
-import FilmDetailsComponent from './components/film-details.js';
-import ShowMoreButtonComponent from './components/button-show.js';
-import FilmController from './controllers/film.js';
+import FilmsListController from './controllers/films-list.js';
 
 import {generateFilters} from './utils/filters.js';
 import {generateSorting} from './utils/sorting.js';
 import {generateStatistics} from './utils/statistic.js';
-import {render, RenderPosition, remove} from './utils/render.js';
-import {CardCount, ShowingCardsCount} from './utils/../const.js';
+import {render, RenderPosition} from './utils/render.js';
+import {CardCount} from './const.js';
 
 import {generateCards} from './mock/film.js';
-import {getTopRatedMovies} from './utils/extra-block.js';
-import {getMostCommentedMovies} from './utils/extra-block.js';
-
 
 const cards = generateCards(CardCount.ALL);
 const filters = generateFilters(cards);
@@ -28,8 +20,6 @@ const moviesInside = cards.length;
 const sort = generateSorting();
 const stats = generateStatistics(cards);
 const userRank = stats.rank;
-const mostCommentedMovies = getMostCommentedMovies(cards);
-const topRatedMovies = getTopRatedMovies(cards);
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -41,69 +31,11 @@ render(mainElement, new MainNavigationComponent(filters), RenderPosition.BEFOREE
 render(mainElement, new SortingComponent(sort), RenderPosition.BEFOREEND);
 render(mainElement, new StatisticComponent(stats), RenderPosition.AFTERBEGIN);
 
-const renderListCard = (listComponent, films) => {
-
-  const filmListElement = listComponent.getElement().querySelector(`.films-list__container`);
-  const filmController = new FilmController(filmListElement);
-  let showingCardsCount = ShowingCardsCount.ON_START;
-  films.slice(0, showingCardsCount)
-    .forEach((card) => {
-      filmController.render(card);
-    });
-
-  const showMoreButtonComponent = new ShowMoreButtonComponent();
-  render(listComponent.getElement(), showMoreButtonComponent, RenderPosition.BEFOREEND);
-  showMoreButtonComponent.setClickHandler(() => {
-    const prevCardsCount = showingCardsCount;
-    showingCardsCount = showingCardsCount + ShowingCardsCount.BY_BUTTON;
-
-    films.slice(prevCardsCount, showingCardsCount)
-      .forEach((card) => filmController.render(card));
-
-    if (showingCardsCount >= films.length) {
-      remove(showMoreButtonComponent);
-    }
-  });
-};
-
-const renderListExtra = (listExtraComponent, films) => {
-  const cardListExtraElement = listExtraComponent.getElement().querySelector(`.films-list__container`);
-  const filmController = new FilmController(cardListExtraElement);
-  let showingCardsCount = ShowingCardsCount.EXTRA_MOVIE_CARD;
-  films.slice(0, showingCardsCount)
-    .forEach((card) => {
-      filmController.render(card);
-    });
-};
-
-const renderFilmsContent = () => {
-  if (cards.length === 0) {
-    render(filmsContainer, new NoFilmsComponent(), RenderPosition.BEFOREEND);
-    return;
-  }
-  const listComponent = new FilmsListComponent();
-  render(filmsContainer, listComponent, RenderPosition.BEFOREEND);
-  renderListCard(listComponent, cards);
-
-  const listTopRatedComponent = new FilmsListComponent(`--extra`, `Top rated`);
-  render(filmsContainer, listTopRatedComponent, RenderPosition.BEFOREEND);
-
-  if (topRatedMovies.length > 0) {
-    renderListExtra(listTopRatedComponent, topRatedMovies);
-  }
-
-  const listCommentedComponent = new FilmsListComponent(`--extra`, `Most commented`);
-  render(filmsContainer, listCommentedComponent, RenderPosition.BEFOREEND);
-
-  if (mostCommentedMovies.length > 0) {
-    renderListExtra(listCommentedComponent, mostCommentedMovies);
-  }
-};
-
-
 render(mainElement, new FilmsComponent(), RenderPosition.BEFOREEND);
-const filmsContainer = mainElement.querySelector(`.films`);
-renderFilmsContent();
 
+const filmsContainer = mainElement.querySelector(`.films`);
+
+const filmsListController = new FilmsListController(filmsContainer);
+filmsListController.render(cards);
 render(footerStatisticsElement, new FooterStatisticsComponent(moviesInside), RenderPosition.BEFOREEND);
 
