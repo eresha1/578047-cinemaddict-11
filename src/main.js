@@ -9,7 +9,7 @@ import FilmsListComponent from './components/films-list.js';
 import FilmsComponent from './components/films.js';
 import FilmDetailsComponent from './components/film-details.js';
 import ShowMoreButtonComponent from './components/button-show.js';
-// import FilmsController from './controllers/films.js';
+import FilmController from './controllers/film.js';
 
 import {generateFilters} from './utils/filters.js';
 import {generateSorting} from './utils/sorting.js';
@@ -20,6 +20,7 @@ import {CardCount, ShowingCardsCount} from './utils/../const.js';
 import {generateCards} from './mock/film.js';
 import {getTopRatedMovies} from './utils/extra-block.js';
 import {getMostCommentedMovies} from './utils/extra-block.js';
+
 
 const cards = generateCards(CardCount.ALL);
 const filters = generateFilters(cards);
@@ -40,48 +41,14 @@ render(mainElement, new MainNavigationComponent(filters), RenderPosition.BEFOREE
 render(mainElement, new SortingComponent(sort), RenderPosition.BEFOREEND);
 render(mainElement, new StatisticComponent(stats), RenderPosition.AFTERBEGIN);
 
-
-const renderCard = (filmListElement, film) => {
-
-  const escPressHandler = (evt) => {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-    if (isEscKey) {
-      closeFilmDetails();
-    }
-  };
-
-  const openFilmDetails = () => {
-    document.body.classList.add(`hide-overflow`);
-    render(document.body, filmDetailsComponent, RenderPosition.BEFOREEND);
-    document.addEventListener(`keydown`, escPressHandler);
-  };
-  const cardOpenFilmDetailsHandler = () => openFilmDetails();
-
-  const closeFilmDetails = () => {
-    document.body.classList.remove(`hide-overflow`);
-    document.body.removeChild(filmDetailsComponent.getElement());
-    document.removeEventListener(`keydown`, escPressHandler);
-  };
-
-  const closeFilmDetailsHandler = () => closeFilmDetails();
-
-  const filmCardComponent = new FilmCardComponent(film);
-  filmCardComponent.setOpenFilmDetailsHandler(cardOpenFilmDetailsHandler);
-
-  const filmDetailsComponent = new FilmDetailsComponent(film);
-  filmDetailsComponent.setCloseFilmDetailsHandler(closeFilmDetailsHandler);
-
-  render(filmListElement, filmCardComponent, RenderPosition.BEFOREEND);
-};
-
 const renderListCard = (listComponent, films) => {
 
   const filmListElement = listComponent.getElement().querySelector(`.films-list__container`);
-
+  const filmController = new FilmController(filmListElement);
   let showingCardsCount = ShowingCardsCount.ON_START;
   films.slice(0, showingCardsCount)
     .forEach((card) => {
-      renderCard(filmListElement, card);
+      filmController.render(card);
     });
 
   const showMoreButtonComponent = new ShowMoreButtonComponent();
@@ -91,7 +58,7 @@ const renderListCard = (listComponent, films) => {
     showingCardsCount = showingCardsCount + ShowingCardsCount.BY_BUTTON;
 
     films.slice(prevCardsCount, showingCardsCount)
-      .forEach((card) => renderCard(filmListElement, card));
+      .forEach((card) => filmController.render(card));
 
     if (showingCardsCount >= films.length) {
       remove(showMoreButtonComponent);
@@ -101,17 +68,13 @@ const renderListCard = (listComponent, films) => {
 
 const renderListExtra = (listExtraComponent, films) => {
   const cardListExtraElement = listExtraComponent.getElement().querySelector(`.films-list__container`);
+  const filmController = new FilmController(cardListExtraElement);
   let showingCardsCount = ShowingCardsCount.EXTRA_MOVIE_CARD;
   films.slice(0, showingCardsCount)
     .forEach((card) => {
-      renderCard(cardListExtraElement, card);
+      filmController.render(card);
     });
 };
-
-
-render(mainElement, new FilmsComponent(), RenderPosition.BEFOREEND);
-const filmsContainer = mainElement.querySelector(`.films`);
-
 
 const renderFilmsContent = () => {
   if (cards.length === 0) {
@@ -137,6 +100,9 @@ const renderFilmsContent = () => {
   }
 };
 
+
+render(mainElement, new FilmsComponent(), RenderPosition.BEFOREEND);
+const filmsContainer = mainElement.querySelector(`.films`);
 renderFilmsContent();
 
 render(footerStatisticsElement, new FooterStatisticsComponent(moviesInside), RenderPosition.BEFOREEND);

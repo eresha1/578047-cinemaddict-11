@@ -3,13 +3,13 @@ import AbstractComponent from "./abstract-component.js";
 const createFilmsListTemplate = (extra = ``, title = `All movies. Upcoming`) => {
   return (
     `<section class="films-list${extra}">
-FilmsList        <h2 class="films-list__title${extra ? `` : `visually-hidden`}">${title}</h2>
+        <h2 class="films-list__title${extra ? `` : `visually-hidden`}">${title}</h2>
         <div class="films-list__container"></div>
     </section>`
   );
 };
 
-export default class  extends AbstractComponent {
+export default class FilmsList extends AbstractComponent {
   constructor(extra, title) {
     super();
     this._extra = extra;
