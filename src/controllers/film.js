@@ -2,7 +2,6 @@ import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsComponent from '../components/film-details.js';
 import {render, RenderPosition} from '../utils/render.js';
 
-
 export default class FilmController {
   constructor(container) {
     this._container = container;
