@@ -1,18 +1,16 @@
 import FilmsListComponent from '../components/films-list.js';
 import ShowMoreButtonComponent from '../components/button-show.js';
-import NoFilmsComponent from '../components/no-films.js';
+import NoFilmsComponent from '../components/no-films.js';import FilmsContainerComponent from '../components/films-container.js';
 
 import FilmController from '../controllers/film.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {ShowingCardsCount} from '../utils/../const.js';
 import {getTopRatedMovies, getMostCommentedMovies} from '../utils/extra-block.js';
 
-
-
 const renderListCard = (listComponent, films) => {
-
-  const filmListElement = listComponent.getElement().querySelector(`.films-list__container`);
-  const filmController = new FilmController(filmListElement);
+  const filmsContainerComponent = new FilmsContainerComponent();
+  render(listComponent.getElement(), filmsContainerComponent, RenderPosition.BEFOREEND);
+  const filmController = new FilmController(filmsContainerComponent.getElement());
   let showingCardsCount = ShowingCardsCount.ON_START;
   films.slice(0, showingCardsCount)
     .forEach((card) => {
@@ -34,9 +32,11 @@ const renderListCard = (listComponent, films) => {
   });
 };
 
+
 const renderListExtra = (listExtraComponent, films) => {
-  const cardListExtraElement = listExtraComponent.getElement().querySelector(`.films-list__container`);
-  const filmController = new FilmController(cardListExtraElement);
+  const filmsContainerComponent = new FilmsContainerComponent();
+  render(listExtraComponent.getElement(), filmsContainerComponent, RenderPosition.BEFOREEND);
+  const filmController = new FilmController(filmsContainerComponent.getElement());
   let showingCardsCount = ShowingCardsCount.EXTRA_MOVIE_CARD;
   films.slice(0, showingCardsCount)
     .forEach((card) => {
@@ -44,38 +44,38 @@ const renderListExtra = (listExtraComponent, films) => {
     });
 };
 
-const renderFilmsContent = (filmsContainer, cards) => {
-  if (cards.length === 0) {
-    render(filmsContainer, new NoFilmsComponent(), RenderPosition.BEFOREEND);
-    return;
-  }
-  const listComponent = new FilmsListComponent();
-  render(filmsContainer, listComponent, RenderPosition.BEFOREEND);
-  renderListCard(listComponent, cards);
-
-  const mostCommentedMovies = getMostCommentedMovies(cards);
-  const topRatedMovies = getTopRatedMovies(cards);
-
-  const listTopRatedComponent = new FilmsListComponent(`--extra`, `Top rated`);
-  render(filmsContainer, listTopRatedComponent, RenderPosition.BEFOREEND);
-
-  if (topRatedMovies.length > 0) {
-    renderListExtra(listTopRatedComponent, topRatedMovies);
-  }
-
-  const listCommentedComponent = new FilmsListComponent(`--extra`, `Most commented`);
-  render(filmsContainer, listCommentedComponent, RenderPosition.BEFOREEND);
-
-  if (mostCommentedMovies.length > 0) {
-    renderListExtra(listCommentedComponent, mostCommentedMovies);
-  }
-};
 export default class FilmsListController {
   constructor(container) {
     this._container = container;
+    this._noFilmsComponent = new NoFilmsComponent();
+    this._filmsListComponent = new FilmsListComponent();
+    this._listTopRatedComponent = new FilmsListComponent(`--extra`, `Top rated`);
+    this._listCommentedComponent = new FilmsListComponent(`--extra`, `Most commented`);
   }
 
-  render(films) {
-    renderFilmsContent(this._container, films);
-  }
+  render(cards) {
+    const filmsContainer = this._container.getElement();
+    if (cards.length === 0) {
+      render(filmsContainer, this._noFilmsComponent(), RenderPosition.BEFOREEND);
+      return;
+    }
+
+    render(filmsContainer, this._filmsListComponent, RenderPosition.BEFOREEND);
+    renderListCard(this._filmsListComponent, cards);
+
+    const mostCommentedMovies = getMostCommentedMovies(cards);
+    const topRatedMovies = getTopRatedMovies(cards);
+
+    render(filmsContainer, this._listTopRatedComponent, RenderPosition.BEFOREEND);
+
+    if (topRatedMovies.length > 0) {
+      renderListExtra(this._listTopRatedComponent, topRatedMovies);
+    }
+
+    render(filmsContainer, this._listCommentedComponent, RenderPosition.BEFOREEND);
+
+    if (mostCommentedMovies.length > 0) {
+      renderListExtra(this._listCommentedComponent, mostCommentedMovies);
+    }
+  };
 }

@@ -2,6 +2,7 @@ import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsComponent from '../components/film-details.js';
 import {render, RenderPosition} from '../utils/render.js';
 
+
 export default class FilmController {
   constructor(container) {
     this._container = container;
@@ -16,13 +17,11 @@ export default class FilmController {
       }
     };
 
-    const openFilmDetails = () => {
+    const cardOpenFilmDetailsHandler = () => {
       this._body.classList.add(`hide-overflow`);
       render(this._body, filmDetailsComponent, RenderPosition.BEFOREEND);
       document.addEventListener(`keydown`, escPressHandler);
     };
-
-    const cardOpenFilmDetailsHandler = () => openFilmDetails();
 
     const closeFilmDetails = () => {
       this._body.classList.remove(`hide-overflow`);

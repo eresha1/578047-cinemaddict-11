@@ -21,10 +21,6 @@ export const render = (container, component, place) => {
   }
 };
 
-// export const remove = (element) => {
-//   element.remove();
-// };
-
 export const remove = (component) => {
   component.getElement().remove();
   component.removeElement();

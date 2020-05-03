@@ -10,7 +10,7 @@ import {generateFilters} from './utils/filters.js';
 import {generateSorting} from './utils/sorting.js';
 import {generateStatistics} from './utils/statistic.js';
 import {render, RenderPosition} from './utils/render.js';
-import {CardCount} from './const.js';
+import {CardCount} from './utils/../const.js';
 
 import {generateCards} from './mock/film.js';
 
@@ -20,7 +20,6 @@ const moviesInside = cards.length;
 const sort = generateSorting();
 const stats = generateStatistics(cards);
 const userRank = stats.rank;
-
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 const footerElement = document.querySelector(`.footer`);
@@ -31,11 +30,13 @@ render(mainElement, new MainNavigationComponent(filters), RenderPosition.BEFOREE
 render(mainElement, new SortingComponent(sort), RenderPosition.BEFOREEND);
 render(mainElement, new StatisticComponent(stats), RenderPosition.AFTERBEGIN);
 
-render(mainElement, new FilmsComponent(), RenderPosition.BEFOREEND);
 
-const filmsContainer = mainElement.querySelector(`.films`);
+const filmsComponent = new FilmsComponent();
+render(mainElement, filmsComponent, RenderPosition.BEFOREEND);
 
-const filmsListController = new FilmsListController(filmsContainer);
+const filmsListController = new FilmsListController(filmsComponent);
+
 filmsListController.render(cards);
+
 render(footerStatisticsElement, new FooterStatisticsComponent(moviesInside), RenderPosition.BEFOREEND);
 
