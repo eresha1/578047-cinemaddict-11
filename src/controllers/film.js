@@ -5,10 +5,11 @@ import {render, RenderPosition} from '../utils/render.js';
 export default class FilmController {
   constructor(container) {
     this._container = container;
-    this._body = document.querySelector(`body`);
+    // this._body = document.querySelector(`body`);
   }
 
   render(film) {
+    this._film = film;
     const escPressHandler = (evt) => {
       const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
       if (isEscKey) {
@@ -17,14 +18,14 @@ export default class FilmController {
     };
 
     const cardOpenFilmDetailsHandler = () => {
-      this._body.classList.add(`hide-overflow`);
-      render(this._body, filmDetailsComponent, RenderPosition.BEFOREEND);
+      document.body.classList.add(`hide-overflow`);
+      render(document.body, filmDetailsComponent, RenderPosition.BEFOREEND);
       document.addEventListener(`keydown`, escPressHandler);
     };
 
     const closeFilmDetails = () => {
-      this._body.classList.remove(`hide-overflow`);
-      this._body.removeChild(filmDetailsComponent.getElement());
+      document.body.classList.remove(`hide-overflow`);
+      document.body.removeChild(filmDetailsComponent.getElement());
       document.removeEventListener(`keydown`, escPressHandler);
     };
 
@@ -35,7 +36,6 @@ export default class FilmController {
 
     const filmDetailsComponent = new FilmDetailsComponent(film);
     filmDetailsComponent.setCloseFilmDetailsHandler(closeFilmDetailsHandler);
-
     render(this._container, filmCardComponent, RenderPosition.BEFOREEND);
   }
 }

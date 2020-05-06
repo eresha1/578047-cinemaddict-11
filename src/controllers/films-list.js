@@ -1,81 +1,99 @@
 import FilmsListComponent from '../components/films-list.js';
+import FilmsComponent from '../components/films.js';
 import ShowMoreButtonComponent from '../components/button-show.js';
 import NoFilmsComponent from '../components/no-films.js';
 import FilmsContainerComponent from '../components/films-container.js';
 
 import FilmController from '../controllers/film.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
-import {ShowingCardsCount} from '../utils/../const.js';
+import {ShowingCardsCount} from '../const.js';
 import {getTopRatedMovies, getMostCommentedMovies} from '../utils/extra-block.js';
+
+const renderFilms = (films, filmCardsContainer) => {
+  return films.map((film) => {
+    const filmController = new FilmController(filmCardsContainer);
+    filmController.render(film);
+    return filmController;
+  });
+};
+
 
 export default class FilmsListController {
   constructor(container) {
     this._container = container;
+
+    this._filmsComponent = new FilmsComponent();
     this._noFilmsComponent = new NoFilmsComponent();
     this._filmsListComponent = new FilmsListComponent();
     this._listTopRatedComponent = new FilmsListComponent(`--extra`, `Top rated`);
     this._listCommentedComponent = new FilmsListComponent(`--extra`, `Most commented`);
     this._filmsContainerComponent = new FilmsContainerComponent();
-    this._filmController = new FilmController(this._filmsContainerComponent.getElement());
+    this._filmsTopContainerComponent = new FilmsContainerComponent();
+    this._filmsCommentContainerComponent = new FilmsContainerComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+    this._showingCardsCount = ShowingCardsCount.ON_START;
+    this._showingCardsCountExtra = ShowingCardsCount.EXTRA_MOVIE_CARD;
+    this._shownFilms = [];
   }
 
-  _renderListCard(listComponent, films) {
-    render(listComponent.getElement(), this._filmsContainerComponent, RenderPosition.BEFOREEND);
-    let showingCardsCount = ShowingCardsCount.ON_START;
-    films.slice(0, showingCardsCount)
-      .forEach((card) => {
-        this._filmController.render(card);
-      });
+  render(films) {
+    this._films = films;
+    const filmsContainer = this._container;
 
-    render(listComponent.getElement(), this._showMoreButtonComponent, RenderPosition.BEFOREEND);
-    this._showMoreButtonComponent.setClickHandler(() => {
-      const prevCardsCount = showingCardsCount;
-      showingCardsCount = showingCardsCount + ShowingCardsCount.BY_BUTTON;
+    if (films.length === 0) {
+      render(filmsContainer, this._noFilmsComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+    render(filmsContainer, this._filmsComponent, RenderPosition.BEFOREEND);
+    this._renderListCard();
+    const listTopRatedComponent = this._listTopRatedComponent;
+    const filmsTopContainer = this._filmsTopContainerComponent;
+    this._renderListExtra(listTopRatedComponent, filmsTopContainer, getTopRatedMovies(films));
 
-      films.slice(prevCardsCount, showingCardsCount)
-        .forEach((card) => this._filmController.render(card));
-
-      if (showingCardsCount >= films.length) {
-        remove(this._showMoreButtonComponent);
-      }
-    });
+    const listCommented = this._listCommentedComponent;
+    const filmsCommentContainer = this._filmsCommentContainerComponent;
+    this._renderListExtra(listCommented, filmsCommentContainer, getMostCommentedMovies(films));
   }
 
-  _renderListExtra(listExtraComponent, films) {
-    const filmsContainerComponent = new FilmsContainerComponent();
-    render(listExtraComponent.getElement(), filmsContainerComponent, RenderPosition.BEFOREEND);
-    const filmController = new FilmController(filmsContainerComponent.getElement());
-    let showingCardsCount = ShowingCardsCount.EXTRA_MOVIE_CARD;
-    films.slice(0, showingCardsCount)
-      .forEach((card) => {
-        filmController.render(card);
-      });
+  _renderListCard() {
+    render(this._filmsComponent.getElement(), this._filmsListComponent, RenderPosition.BEFOREEND);
+
+    render(this._filmsListComponent.getElement(), this._filmsContainerComponent, RenderPosition.BEFOREEND);
+
+    const newCards = renderFilms(this._films.slice(0, this._showingCardsCount), this._filmsContainerComponent.getElement());
+    this._shownFilms = this._shownFilms.concat(newCards);
+
+    this._renderShowMoreBtn();
   }
 
-  render(cards) {
-    const filmsContainer = this._container.getElement();
-    if (cards.length === 0) {
-      render(filmsContainer, this._noFilmsComponent(), RenderPosition.BEFOREEND);
+  _renderListExtra(listExtraComponent, containerExtraComponent, films) {
+    render(this._filmsComponent.getElement(), listExtraComponent, RenderPosition.BEFOREEND);
+
+    render(listExtraComponent.getElement(), containerExtraComponent, RenderPosition.BEFOREEND);
+
+    const newfilmExtra = renderFilms(films.slice(0, this._showingCardsCountExtra), containerExtraComponent.getElement());
+    this._shownFilms1 = [].concat(newfilmExtra);
+    this._showingCardsCountExtra = this._shownFilms1.length;
+  }
+
+
+  _renderShowMoreBtn() {
+    if (this._showingCardsCount >= this._films.length) {
       return;
     }
 
-    render(filmsContainer, this._filmsListComponent, RenderPosition.BEFOREEND);
-    this._renderListCard(this._filmsListComponent, cards);
+    render(this._filmsListComponent.getElement(), this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    const mostCommentedMovies = getMostCommentedMovies(cards);
-    const topRatedMovies = getTopRatedMovies(cards);
+    this._showMoreButtonComponent.setClickHandler(() => {
+      const prevCardsCount = this._showingCardsCount;
+      this._showingCardsCount += ShowingCardsCount.BY_BUTTON;
+      const moreFilms = renderFilms(this._films.slice(prevCardsCount, this._showingCardsCount), this._filmsContainerComponent.getElement());
 
-    render(filmsContainer, this._listTopRatedComponent, RenderPosition.BEFOREEND);
+      this._shownFilms = this._shownFilms.concat(moreFilms);
 
-    if (topRatedMovies.length > 0) {
-      this._renderListExtra(this._listTopRatedComponent, topRatedMovies);
-    }
-
-    render(filmsContainer, this._listCommentedComponent, RenderPosition.BEFOREEND);
-
-    if (mostCommentedMovies.length > 0) {
-      this._renderListExtra(this._listCommentedComponent, mostCommentedMovies);
-    }
+      if (this._showingCardsCount >= this._films.length) {
+        remove(this._showMoreButtonComponent);
+      }
+    });
   }
 }

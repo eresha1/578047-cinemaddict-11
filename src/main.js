@@ -3,7 +3,7 @@ import MainNavigationComponent from './components/main-navigation.js';
 import ProfileRatingComponent from './components/profile-rating.js';
 import SortingComponent from './components/sorting.js';
 import StatisticComponent from './components/statistic.js';
-import FilmsComponent from './components/films.js';
+// import FilmsComponent from './components/films.js';
 import FilmsListController from './controllers/films-list.js';
 
 import {generateFilters} from './utils/filters.js';
@@ -31,10 +31,10 @@ render(mainElement, new SortingComponent(sort), RenderPosition.BEFOREEND);
 render(mainElement, new StatisticComponent(stats), RenderPosition.AFTERBEGIN);
 
 
-const filmsComponent = new FilmsComponent();
-render(mainElement, filmsComponent, RenderPosition.BEFOREEND);
+// const filmsComponent = new FilmsComponent();
+// render(mainElement, filmsComponent, RenderPosition.BEFOREEND);
 
-const filmsListController = new FilmsListController(filmsComponent);
+const filmsListController = new FilmsListController(mainElement);
 
 filmsListController.render(cards);
 

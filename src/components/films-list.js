@@ -3,7 +3,7 @@ import AbstractComponent from "./abstract-component.js";
 const createFilmsListTemplate = (extra = ``, title = `All movies. Upcoming`) => {
   return (
     `<section class="films-list${extra}">
-        <h2 class="films-list__title${extra ? `` : `visually-hidden`}">${title}</h2> 
+        <h2 class="films-list__title ${extra ? `` : `visually-hidden`}">${title}</h2>
     </section>`
   );
 };
