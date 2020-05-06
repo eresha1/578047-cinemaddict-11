@@ -1,4 +1,4 @@
-import {getUsersRank} from "../utils/common.js";
+import {getUsersRank} from "../utils/user-rank.js";
 import {getObjectElementsGenres, getTopGenre} from "../utils/get-genres.js";
 import {GENRES} from './../mock/film.js';
 

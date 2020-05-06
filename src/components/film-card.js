@@ -1,8 +1,20 @@
 import {getFormatDuration} from '../utils/common.js';
-import {createElement} from '../utils/render.js';
+import AbstractComponent from "./abstract-component.js";
 
 const creatFilmCardTemplate = (card) => {
-  const {title, rating, dateRelease, duration, genreFirst, poster, shortDescription, commentsCount, isAtWatchlist, isFavorite, isWatched} = card;
+  const {
+    title,
+    rating,
+    dateRelease,
+    duration,
+    genreFirst,
+    poster,
+    shortDescription,
+    commentsCount,
+    isAtWatchlist,
+    isFavorite,
+    isWatched
+  } = card;
   const year = dateRelease.getFullYear();
   const formatDuration = getFormatDuration(duration);
 
@@ -30,21 +42,19 @@ const creatFilmCardTemplate = (card) => {
   );
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractComponent {
   constructor(card) {
+    super();
     this._card = card;
-    this._element = null;
   }
+
   getTemplate() {
     return creatFilmCardTemplate(this._card);
   }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
+
+  setOpenFilmDetailsHandler(handler) {
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
   }
 }

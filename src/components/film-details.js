@@ -1,7 +1,7 @@
 import {MONTH_NAMES} from '../const.js';
 import {COMMENTS_EMODJIES} from './../mock/comment.js';
 import {getFormatDuration} from '../utils/common.js';
-import {createElement} from '../utils/render.js';
+import AbstractComponent from "./abstract-component.js";
 
 const createGenresTemplate = (genres) => {
   return genres.map((genre) => {
@@ -181,21 +181,16 @@ const creatFilmDetailsCardTemplate = (bigCard) => {
   );
 };
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractComponent {
   constructor(bigCard) {
+    super();
     this._bigCard = bigCard;
-    this._element = null;
   }
   getTemplate() {
     return creatFilmDetailsCardTemplate(this._bigCard);
   }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
+
+  setCloseFilmDetailsHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 }

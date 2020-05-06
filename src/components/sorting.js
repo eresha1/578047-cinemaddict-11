@@ -1,4 +1,4 @@
-import {createElement} from '../utils/render.js';
+import AbstractComponent from "./abstract-component.js";
 
 const createSortItem = (title, link, isActive) => {
   return `<li><a href="#${link}" class="sort__button ${isActive === true ? `sort__button--active` : ``}">${title}</a></li>`;
@@ -11,22 +11,13 @@ const creatSortTemplate = (sort) => {
   </ul>`;
 };
 
-export default class Sorting {
+export default class Sorting extends AbstractComponent {
   constructor(sort) {
+    super();
     this._sort = sort;
-    this._element = null;
   }
   getTemplate() {
     return creatSortTemplate(this._sort);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }
 
