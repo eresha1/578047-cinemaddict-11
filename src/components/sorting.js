@@ -38,14 +38,13 @@ const creatSortTemplate = () => {
             ${sortItems}
   </ul>`;
 };
-
 export default class Sorting extends AbstractComponent {
   constructor() {
     super();
     this._currenSortType = SortType.DEFAULT;
   }
   getTemplate() {
-    return creatSortTemplate(this._currentSortType);
+    return creatSortTemplate();
   }
 
   getSortType() {
@@ -65,6 +64,7 @@ export default class Sorting extends AbstractComponent {
       evt.target.classList.add(`sort__button--active`);
 
       const sortType = evt.target.dataset.sortType;
+
       if (this._currentSortType === sortType) {
         return;
       }

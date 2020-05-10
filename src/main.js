@@ -1,13 +1,11 @@
 import FooterStatisticsComponent from './components/footer-statistics.js';
 import MainNavigationComponent from './components/main-navigation.js';
 import ProfileRatingComponent from './components/profile-rating.js';
-import SortingComponent, {SortingOrder} from './components/sorting.js';
 import StatisticComponent from './components/statistic.js';
 // import FilmsComponent from './components/films.js';
 import FilmsListController from './controllers/films-list.js';
 
 import {generateFilters} from './utils/filters.js';
-// import {generateSorting} from './utils/sorting.js';
 import {generateStatistics} from './utils/statistic.js';
 import {render, RenderPosition} from './utils/render.js';
 import {CardCount} from './utils/../const.js';
