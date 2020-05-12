@@ -5,37 +5,46 @@ import {render, RenderPosition} from '../utils/render.js';
 export default class FilmController {
   constructor(container) {
     this._container = container;
-    // this._body = document.querySelector(`body`);
+
+    this._filmCardComponent = null;
+    this._filmDetailsComponent = null;
+
+    this._escPressHandler = this._escPressHandler.bind(this);
+    this._closeFilmDetails = this._closeFilmDetails.bind(this);
+    this._openFilmDetails = this._openFilmDetails.bind(this);
   }
 
   render(film) {
-    this._film = film;
-    const escPressHandler = (evt) => {
-      const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-      if (isEscKey) {
-        closeFilmDetails();
-      }
-    };
+    this._filmCardComponent = new FilmCardComponent(film);
+    this._filmDetailsComponent = new FilmDetailsComponent(film);
 
-    const cardOpenFilmDetailsHandler = () => {
-      document.body.classList.add(`hide-overflow`);
-      render(document.body, filmDetailsComponent, RenderPosition.BEFOREEND);
-      document.addEventListener(`keydown`, escPressHandler);
-    };
+    const cardCloseFilmDetailsHandler = () => this._closeFilmDetails();
+    const cardOpenFilmDetailsHandler = () => this._openFilmDetails();
 
-    const closeFilmDetails = () => {
-      document.body.classList.remove(`hide-overflow`);
-      document.body.removeChild(filmDetailsComponent.getElement());
-      document.removeEventListener(`keydown`, escPressHandler);
-    };
+    this._filmCardComponent.setOpenFilmDetailsHandler(cardOpenFilmDetailsHandler);
 
-    const closeFilmDetailsHandler = () => closeFilmDetails();
 
-    const filmCardComponent = new FilmCardComponent(film);
-    filmCardComponent.setOpenFilmDetailsHandler(cardOpenFilmDetailsHandler);
+    this._filmDetailsComponent.setCloseFilmDetailsHandler(cardCloseFilmDetailsHandler);
 
-    const filmDetailsComponent = new FilmDetailsComponent(film);
-    filmDetailsComponent.setCloseFilmDetailsHandler(closeFilmDetailsHandler);
-    render(this._container, filmCardComponent, RenderPosition.BEFOREEND);
+    render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+  }
+
+  _escPressHandler(evt) {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+    if (isEscKey) {
+      this._closeFilmDetails();
+    }
+  }
+
+  _openFilmDetails() {
+    document.body.classList.add(`hide-overflow`);
+    render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
+    document.addEventListener(`keydown`, this._escPressHandler);
+  }
+
+  _closeFilmDetails() {
+    document.body.classList.remove(`hide-overflow`);
+    document.body.removeChild(this._filmDetailsComponent.getElement());
+    document.removeEventListener(`keydown`, this._escPressHandler);
   }
 }
