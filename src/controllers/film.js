@@ -1,6 +1,6 @@
 import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsComponent from '../components/film-details.js';
-import {render, RenderPosition} from '../utils/render.js';
+import {render, RenderPosition, replace} from '../utils/render.js';
 
 const Mode = {
   DEFAULT: `default`,
@@ -13,6 +13,7 @@ export default class FilmController {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._mode = Mode.DEFAULT;
 
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
@@ -23,6 +24,9 @@ export default class FilmController {
   }
 
   render(film) {
+    const oldFilmCardComponent = this._filmCardComponent;
+    const oldFilmDetalesComponent = this._filmDetailsComponent;
+
     this._filmCardComponent = new FilmCardComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
 
@@ -76,8 +80,17 @@ export default class FilmController {
       }));
     });
 
-    render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+  //   render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+  // }
+
+    if (oldFilmDetalesComponent && oldFilmCardComponent) {
+      replace(this._filmCardComponent, oldFilmCardComponent);
+      replace(this._filmDetailsComponent, oldFilmDetalesComponent);
+    } else {
+      render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+    }
   }
+
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
