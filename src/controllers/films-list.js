@@ -10,9 +10,9 @@ import {render, RenderPosition, remove} from '../utils/render.js';
 import {ShowingCardsCount} from '../const.js';
 // import {getTopRatedMovies, getMostCommentedMovies, getDatadMovies} from '../utils/sorting.js';
 
-const renderFilms = (films, filmCardsContainer) => {
+const renderFilms = (films, filmCardsContainer, onDataChange, onViewChange) => {
   return films.map((film) => {
-    const filmController = new FilmController(filmCardsContainer);
+    const filmController = new FilmController(filmCardsContainer, onDataChange, onViewChange);
     filmController.render(film);
     return filmController;
   });
@@ -49,6 +49,7 @@ export default class FilmsListController {
 
     this._films = [];
     this._showedFilmsControllers = [];
+    this._showedFilmsControllersExtra = [];
     this._showingCardsCount = ShowingCardsCount.ON_START;
     this._filmsComponent = new FilmsComponent();
     this._filmsListComponent = new FilmsListComponent();
@@ -60,6 +61,9 @@ export default class FilmsListController {
     this._noFilmsComponent = new NoFilmsComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._sortingComponent = new SortingComponent();
+
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
 
     this._sortTypeHandler = this._sortTypeHandler.bind(this);
     this._sortingComponent.setSortTypeChangeHandler(this._sortTypeHandler);
@@ -94,8 +98,7 @@ export default class FilmsListController {
     render(this._filmsComponent.getElement(), this._filmsListComponent, RenderPosition.BEFOREEND);
 
     render(this._filmsListComponent.getElement(), this._filmsContainerComponent, RenderPosition.BEFOREEND);
-
-    const newCards = renderFilms(this._films.slice(0, this._showingCardsCount), this._filmsContainerComponent.getElement());
+    const newCards = renderFilms(this._films.slice(0, this._showingCardsCount), this._filmsContainerComponent.getElement(), this._onDataChange, this._onViewChange);
     this._showedFilmsControllers = [].concat(newCards);
     this._renderShowMoreBtn();
   }
@@ -106,9 +109,9 @@ export default class FilmsListController {
     render(listExtraComponent.getElement(), containerExtraComponent, RenderPosition.BEFOREEND);
 
     const sortedFilmExtra = getSortedFilms(this._films, sortType, 0, ShowingCardsCount.EXTRA_MOVIE_CARD);
-    const newfilmExtra = renderFilms(sortedFilmExtra, containerExtraComponent.getElement());
+    const newfilmExtra = renderFilms(sortedFilmExtra, containerExtraComponent.getElement(), this._onDataChange, this._onViewChange);
 
-    this._showedFilmsControllers = newfilmExtra;
+    this._showedFilmsControllersExtra = newfilmExtra;
   }
 
   _renderShowMoreBtn() {
@@ -129,12 +132,25 @@ export default class FilmsListController {
 
     const sortedFilmCards = getSortedFilms(this._films, this._sortingComponent.getSortType(), prevCardsCount, this._showingCardsCount);
 
-    const moreFilms = renderFilms(sortedFilmCards, filmsContainerElement);
+    const moreFilms = renderFilms(sortedFilmCards, filmsContainerElement, this._onDataChange, this._onViewChange);
     this._showedFilmsControllers = this._showedFilmsControllers.concat(moreFilms);
 
     if (this._showingCardsCount >= this._films.length) {
       remove(this._showMoreButtonComponent);
     }
+  }
+
+  _onDataChange(oldData, newData) {
+    const index = this._films.findIndex((it) => it === oldData);
+    if (index === -1) {
+      return;
+    }
+    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
+    this._showedFilmsControllers[index].render(this._films[index]);
+  }
+
+  _onViewChange() {
+    this._showedFilmsControllers.forEach((it) => it.setDefaultView());
   }
 
   _sortTypeHandler(sortType) {
@@ -146,7 +162,7 @@ export default class FilmsListController {
 
     filmsContainerElement.innerHTML = ``;
 
-    const moreFilms = renderFilms(sortedCards, filmsContainerElement);
+    const moreFilms = renderFilms(sortedCards, filmsContainerElement, this._onDataChange, this._onViewChange);
 
     this._showedFilmsControllers = moreFilms;
 

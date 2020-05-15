@@ -1,9 +1,9 @@
 import {MONTH_NAMES} from '../const.js';
 import {COMMENTS_EMODJIES} from './../mock/comment.js';
 import {getFormatDuration} from '../utils/common.js';
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component";
 
-const createGenresTemplate = (genres) => {
+const createGenresnMarkup = (genres) => {
   return genres.map((genre) => {
     return (
       `<span class="film-details__genre">${genre}</span>`
@@ -11,7 +11,7 @@ const createGenresTemplate = (genres) => {
   }).join(`\n`);
 };
 
-const createEmojiTemplate = (names) => {
+const createEmojinMarkup = (names) => {
   return names.map((name) => {
     return (
       `<input
@@ -28,13 +28,13 @@ const createEmojiTemplate = (names) => {
   }).join(`\n`);
 };
 
-const createCommentsTemplate = (comments) => {
+const createCommentsnMarkup = (comments) => {
   return comments.map((comment) => {
-    const {text, author, emodjies, date} = comment;
+    const {text, author, emoji, date} = comment;
     return (
       `<li class="film-details__comment">
               <span class="film-details__comment-emoji">
-                <img src="images/emoji/${emodjies}.png" width="55" height="55" alt="emoji-{emotion}">
+                <img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-{emotion}">
               </span>
               <div>
                 <p class="film-details__comment-text">${text}</p>
@@ -49,7 +49,25 @@ const createCommentsTemplate = (comments) => {
   }).join(`\n`);
 };
 
-const creatFilmDetailsCardTemplate = (bigCard) => {
+const createButtonMarkup = (name, text, isChecked = true) => {
+  return (
+    `<input type="checkbox" class="film-details__control-input visually-hidden" id="${name}" name="${name}" ${isChecked ? `checked` : ``}>
+    <label for="${name}" class="film-details__control-label film-details__control-label--${name}">${text}</label>`
+  );
+};
+
+
+// const createEmojiImage = (name) => {
+//   const image = document.createElement(`img`);
+//   image.width = 55;
+//   image.height = 55;
+//   image.src = `images/emoji/${name}.png`;
+//   image.alt = `emoji-${name}`;
+//   return image;
+// };
+
+
+const creatFilmDetailsCardTemplate = (bigCard, options = {}) => {
   const {
     title,
     originalTitle,
@@ -66,17 +84,22 @@ const creatFilmDetailsCardTemplate = (bigCard) => {
     comments,
     commentsCount,
     ageRating,
-    isAtWatchlist, isFavorite, isWatched
+    isFavorite,
+    isWatched,
+    isAtWatchlist
   } = bigCard;
+
+  const {newComment} = options;
+
 
   const date = `${dateRelease.getDate()} ${MONTH_NAMES[dateRelease.getMonth()]}`;
   const year = dateRelease.getFullYear();
 
   const formatDuration = getFormatDuration(duration);
 
-  const isChecked = (status) => {
-    return status ? `checked` : ``;
-  };
+  const addToWatchlistButton = createButtonMarkup(`watchlist`, `Add to watchlist`, isAtWatchlist);
+  const alreadyWatchedtButton = createButtonMarkup(`watched`, `Already watched`, isWatched);
+  const addToFavoritesButton = createButtonMarkup(`favorite`, `Add to favorites`, isFavorite);
 
   return (
     `<section class="film-details">
@@ -132,7 +155,7 @@ const creatFilmDetailsCardTemplate = (bigCard) => {
               <tr class="film-details__row">
                 <td class="film-details__term">${genres.length === 1 ? `Genre` : `Genres`}</td>
                 <td class="film-details__cell">
-                ${createGenresTemplate(genres)}
+                ${createGenresnMarkup(genres)}
                 </td>
               </tr>
             </table>
@@ -144,14 +167,9 @@ const creatFilmDetailsCardTemplate = (bigCard) => {
         </div>
 
         <section class="film-details__controls">
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist"  ${isChecked(isAtWatchlist)}>
-          <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isChecked(isWatched)}>
-          <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isChecked(isFavorite)}>
-          <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+        ${addToWatchlistButton}
+        ${alreadyWatchedtButton}
+        ${addToFavoritesButton}
         </section>
       </div>
 
@@ -160,18 +178,20 @@ const creatFilmDetailsCardTemplate = (bigCard) => {
           <h3 class="film-details__comments-title">${comments.length === 1 ? `Comment` : `Comments`} <span class="film-details__comments-count">${commentsCount}</span></h3>
 
           <ul class="film-details__comments-list">
-          ${createCommentsTemplate(comments)}
+          ${createCommentsnMarkup(comments)}
           </ul>
 
           <div class="film-details__new-comment">
-            <div for="add-emoji" class="film-details__add-emoji-label"></div>
+            <div for="add-emoji" class="film-details__add-emoji-label">
+            ${ newComment.emoji ? `<img src="images/emoji/${newComment.emoji}.png" width="55" height="55" alt="emoji-smile">` : ``}
+          </div>
 
             <label class="film-details__comment-label">
               <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
             </label>
 
             <div class="film-details__emoji-list">
-            ${createEmojiTemplate(COMMENTS_EMODJIES)}
+            ${createEmojinMarkup(COMMENTS_EMODJIES)}
             </div>
           </div>
         </section>
@@ -181,16 +201,87 @@ const creatFilmDetailsCardTemplate = (bigCard) => {
   );
 };
 
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(bigCard) {
     super();
     this._bigCard = bigCard;
+
+    this._newComment = {
+      // text: ``,
+      emoji: ``,
+      // author: ``,
+      // date: null,
+    };
+
+
+    this._subscribeOnEvents();
+
+    this._closeFilmDetailsHandler = null;
+    this._addToWatchlistClickHandler = null;
+    this._addWatchedClickHandler = null;
+    this._addToFavoriteClickHandler = null;
   }
+
   getTemplate() {
-    return creatFilmDetailsCardTemplate(this._bigCard);
+    return creatFilmDetailsCardTemplate(this._bigCard, {
+      newComment: this._newComment,
+    });
   }
+
+  recoveryListeners() {
+    this.setCloseFilmDetailsHandler(this._closeFilmDetailsHandler);
+    this.setAddToWatchlistClickHandler(this._addToWatchlistClickHandler);
+    this.setMarkAsWatchedClickHandler(this._addWatchedClickHandler);
+    this.setMarkAsFavoriteClickHandler(this._addToFavoriteClickHandler);
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  reset() {
+    this._newComment = {
+      // text: ``,
+      emoji: ``,
+      // author: ``,
+      // date: null,
+    };
+
+    this.rerender();
+  }
+
 
   setCloseFilmDetailsHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this._closeFilmDetailsHandler = handler;
   }
+
+  setAddToWatchlistClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, handler);
+    this._addToWatchlistClickHandler = handler;
+  }
+
+  setMarkAsWatchedClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, handler);
+    this._addWatchedClickHandler = handler;
+  }
+
+  setMarkAsFavoriteClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, handler);
+    this._addToFavoriteClickHandler = handler;
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+    element.querySelector(`.film-details__emoji-list`)
+      .addEventListener(`change`, (evt) => {
+        this._newComment.emoji = evt.target.value;
+        this.rerender();
+      });
+  }
+
 }
