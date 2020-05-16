@@ -80,9 +80,6 @@ export default class FilmController {
       }));
     });
 
-  //   render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
-  // }
-
     if (oldFilmDetalesComponent && oldFilmCardComponent) {
       replace(this._filmCardComponent, oldFilmCardComponent);
       replace(this._filmDetailsComponent, oldFilmDetalesComponent);
@@ -90,7 +87,6 @@ export default class FilmController {
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
     }
   }
-
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {

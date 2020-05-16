@@ -1,50 +1,12 @@
 import {MONTH_NAMES} from '../const.js';
-import {COMMENTS_EMODJIES} from './../mock/comment.js';
 import {getFormatDuration} from '../utils/common.js';
 import AbstractSmartComponent from "./abstract-smart-component";
-
+import CommentsComponent from './comments.js';
+import {createElement, render, RenderPosition} from '../utils/render.js';
 const createGenresnMarkup = (genres) => {
   return genres.map((genre) => {
     return (
       `<span class="film-details__genre">${genre}</span>`
-    );
-  }).join(`\n`);
-};
-
-const createEmojinMarkup = (names) => {
-  return names.map((name) => {
-    return (
-      `<input
-        class="film-details__emoji-item visually-hidden"
-        name="comment-emoji"
-        type="radio"
-        id="emoji-${name}"
-        value="${name}"
-      >
-      <label class="film-details__emoji-label" for="emoji-${name}">
-        <img src="images/emoji/${name}.png" width="30" height="30" alt="emoji">
-      </label>`
-    );
-  }).join(`\n`);
-};
-
-const createCommentsnMarkup = (comments) => {
-  return comments.map((comment) => {
-    const {text, author, emoji, date} = comment;
-    return (
-      `<li class="film-details__comment">
-              <span class="film-details__comment-emoji">
-                <img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-{emotion}">
-              </span>
-              <div>
-                <p class="film-details__comment-text">${text}</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">${author}</span>
-                  <span class="film-details__comment-day">${date}</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>`
     );
   }).join(`\n`);
 };
@@ -56,41 +18,8 @@ const createButtonMarkup = (name, text, isChecked = true) => {
   );
 };
 
-
-// const createEmojiImage = (name) => {
-//   const image = document.createElement(`img`);
-//   image.width = 55;
-//   image.height = 55;
-//   image.src = `images/emoji/${name}.png`;
-//   image.alt = `emoji-${name}`;
-//   return image;
-// };
-
-
-const creatFilmDetailsCardTemplate = (bigCard, options = {}) => {
-  const {
-    title,
-    originalTitle,
-    poster,
-    rating,
-    producer,
-    writers,
-    actors,
-    countries,
-    genres,
-    duration,
-    description,
-    dateRelease,
-    comments,
-    commentsCount,
-    ageRating,
-    isFavorite,
-    isWatched,
-    isAtWatchlist
-  } = bigCard;
-
-  const {newComment} = options;
-
+const creatFilmDetailsCardTemplate = (bigCard) => {
+  const {title, originalTitle, poster, rating, producer, writers, actors, countries, genres, duration, description, dateRelease, ageRating, isFavorite, isWatched, isAtWatchlist} = bigCard;
 
   const date = `${dateRelease.getDate()} ${MONTH_NAMES[dateRelease.getMonth()]}`;
   const year = dateRelease.getFullYear();
@@ -174,27 +103,7 @@ const creatFilmDetailsCardTemplate = (bigCard, options = {}) => {
       </div>
 
       <div class="form-details__bottom-container">
-        <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">${comments.length === 1 ? `Comment` : `Comments`} <span class="film-details__comments-count">${commentsCount}</span></h3>
 
-          <ul class="film-details__comments-list">
-          ${createCommentsnMarkup(comments)}
-          </ul>
-
-          <div class="film-details__new-comment">
-            <div for="add-emoji" class="film-details__add-emoji-label">
-            ${ newComment.emoji ? `<img src="images/emoji/${newComment.emoji}.png" width="55" height="55" alt="emoji-smile">` : ``}
-          </div>
-
-            <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-            </label>
-
-            <div class="film-details__emoji-list">
-            ${createEmojinMarkup(COMMENTS_EMODJIES)}
-            </div>
-          </div>
-        </section>
       </div>
     </form>
   </section>`
@@ -206,15 +115,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     super();
     this._bigCard = bigCard;
 
-    this._newComment = {
-      // text: ``,
-      emoji: ``,
-      // author: ``,
-      // date: null,
-    };
-
-
-    this._subscribeOnEvents();
+    this._comments = new CommentsComponent(bigCard, this._onDataChange);
 
     this._closeFilmDetailsHandler = null;
     this._addToWatchlistClickHandler = null;
@@ -222,10 +123,16 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._addToFavoriteClickHandler = null;
   }
 
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+      render(this._element.querySelector(`.form-details__bottom-container`), this._comments, RenderPosition.AFTERBEGIN);
+    }
+    return this._element;
+  }
+
   getTemplate() {
-    return creatFilmDetailsCardTemplate(this._bigCard, {
-      newComment: this._newComment,
-    });
+    return creatFilmDetailsCardTemplate(this._bigCard);
   }
 
   recoveryListeners() {
@@ -233,24 +140,11 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setAddToWatchlistClickHandler(this._addToWatchlistClickHandler);
     this.setMarkAsWatchedClickHandler(this._addWatchedClickHandler);
     this.setMarkAsFavoriteClickHandler(this._addToFavoriteClickHandler);
-    this._subscribeOnEvents();
   }
 
   rerender() {
     super.rerender();
   }
-
-  reset() {
-    this._newComment = {
-      // text: ``,
-      emoji: ``,
-      // author: ``,
-      // date: null,
-    };
-
-    this.rerender();
-  }
-
 
   setCloseFilmDetailsHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
@@ -275,13 +169,13 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._addToFavoriteClickHandler = handler;
   }
 
-  _subscribeOnEvents() {
-    const element = this.getElement();
-    element.querySelector(`.film-details__emoji-list`)
-      .addEventListener(`change`, (evt) => {
-        this._newComment.emoji = evt.target.value;
-        this.rerender();
-      });
-  }
+  // _subscribeOnEvents() {
+  //   const element = this.getElement();
+  //   element.querySelector(`.film-details__emoji-list`)
+  //     .addEventListener(`change`, (evt) => {
+  //       this._newComment.emoji = evt.target.value;
+  //       this.rerender();
+  //     });
+  // }
 
 }

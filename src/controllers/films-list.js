@@ -1,5 +1,6 @@
 import FilmsListComponent from '../components/films-list.js';
 import FilmsComponent from '../components/films.js';
+import FilmCardComponent from '../components/film-card.js';
 import ShowMoreButtonComponent from '../components/button-show.js';
 import NoFilmsComponent from '../components/no-films.js';
 import FilmsContainerComponent from '../components/films-container.js';
@@ -51,6 +52,7 @@ export default class FilmsListController {
     this._showedFilmsControllers = [];
     this._showedFilmsControllersExtra = [];
     this._showingCardsCount = ShowingCardsCount.ON_START;
+    this._filmCardComponent = new FilmCardComponent();
     this._filmsComponent = new FilmsComponent();
     this._filmsListComponent = new FilmsListComponent();
     this._filmsContainerComponent = new FilmsContainerComponent();
@@ -81,10 +83,8 @@ export default class FilmsListController {
     }
 
     render(filmsContainer, this._filmsComponent, RenderPosition.BEFOREEND);
-    // render(this._filmsComponent.getElement(), this._filmsListComponent, RenderPosition.BEFOREEND);
 
     this._renderListCard();
-
     const listTopRatedComponent = this._listTopRatedComponent;
     const filmsTopContainer = this._filmsTopContainerComponent;
     this._renderListExtra(listTopRatedComponent, filmsTopContainer, SortType.RATING);
@@ -146,7 +146,7 @@ export default class FilmsListController {
       return;
     }
     this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
-    this._showedFilmsControllers[index].render(this._films[index]);
+    this._showedFilmsControllers.find((film) => film._filmCardComponent._card === oldData).render(this._films[index]);
   }
 
   _onViewChange() {
