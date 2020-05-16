@@ -1,10 +1,19 @@
 import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsComponent from '../components/film-details.js';
-import {render, RenderPosition} from '../utils/render.js';
+import {render, RenderPosition, replace} from '../utils/render.js';
+
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
+
 
 export default class FilmController {
-  constructor(container) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
+    this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+    this._mode = Mode.DEFAULT;
 
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
@@ -15,6 +24,9 @@ export default class FilmController {
   }
 
   render(film) {
+    const oldFilmCardComponent = this._filmCardComponent;
+    const oldFilmDetalesComponent = this._filmDetailsComponent;
+
     this._filmCardComponent = new FilmCardComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
 
@@ -23,10 +35,63 @@ export default class FilmController {
 
     this._filmCardComponent.setOpenFilmDetailsHandler(cardOpenFilmDetailsHandler);
 
+    this._filmCardComponent.setAddToWatchlistClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(film, Object.assign({}, film, {
+        isAtWatchlist: !film.isAtWatchlist
+      }));
+    });
+
+    this._filmCardComponent.setMarkAsWatchedClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(film, Object.assign({}, film, {
+        isWatched: !film.isWatched
+      }));
+    });
+
+    this._filmCardComponent.setMarkAsFavoriteClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(film, Object.assign({}, film, {
+        isFavorite: !film.isFavorite
+      }));
+    });
+
 
     this._filmDetailsComponent.setCloseFilmDetailsHandler(cardCloseFilmDetailsHandler);
 
-    render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+    this._filmDetailsComponent.setAddToWatchlistClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(film, Object.assign({}, film, {
+        isAtWatchlist: !film.isAtWatchlist
+      }));
+    });
+
+    this._filmDetailsComponent.setMarkAsWatchedClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(film, Object.assign({}, film, {
+        isWatched: !film.isWatched
+      }));
+    });
+
+    this._filmDetailsComponent.setMarkAsFavoriteClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(film, Object.assign({}, film, {
+        isFavorite: !film.isFavorite
+      }));
+    });
+
+    if (oldFilmDetalesComponent && oldFilmCardComponent) {
+      replace(this._filmCardComponent, oldFilmCardComponent);
+      replace(this._filmDetailsComponent, oldFilmDetalesComponent);
+    } else {
+      render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+    }
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceEditToTask();
+    }
   }
 
   _escPressHandler(evt) {

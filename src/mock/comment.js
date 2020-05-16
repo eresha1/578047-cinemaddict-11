@@ -35,7 +35,7 @@ const generateComment = () => {
   return {
     text: getRandomArrayItem(COMMENTS_TEXTS),
     author: getRandomArrayItem(COMMENTS_AUTORS),
-    emodjies: getRandomArrayItem(COMMENTS_EMODJIES),
+    emoji: getRandomArrayItem(COMMENTS_EMODJIES),
     date: getFormatCommentDate()
   };
 };

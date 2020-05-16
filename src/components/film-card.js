@@ -1,6 +1,12 @@
 import {getFormatDuration} from '../utils/common.js';
 import AbstractComponent from "./abstract-component.js";
 
+
+const createButtonMarkup = (name, title, isActive = false) => {
+  return (
+    `<button class="film-card__controls-item button film-card__controls-item--${name} ${isActive ? `` : `film-card__controls-item--active`}">${title}</button>`
+  );
+};
 const creatFilmCardTemplate = (card) => {
   const {
     title,
@@ -18,9 +24,10 @@ const creatFilmCardTemplate = (card) => {
   const year = dateRelease.getFullYear();
   const formatDuration = getFormatDuration(duration);
 
-  const isActive = (status) => {
-    return status ? `film-card__controls-item--active` : ``;
-  };
+  const watchlistButton = createButtonMarkup(`add-to-watchlist`, `Add to watchlist`, !isAtWatchlist);
+  const historyButton = createButtonMarkup(`mark-as-watched`, `Mark as watched`, !isWatched);
+  const favoritesButton = createButtonMarkup(`favorite`, `Mark as favorite`, !isFavorite);
+
   return (
     `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
@@ -34,9 +41,9 @@ const creatFilmCardTemplate = (card) => {
     <p class="film-card__description">${shortDescription}</p>
     <a class="film-card__comments">${commentsCount} ${commentsCount === 1 ? `comment` : `comments`}</a>
     <form class="film-card__controls">
-      <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist  ${isActive(isAtWatchlist)}">Add to watchlist</button>
-      <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isActive(isWatched)}">Mark as watched</button>
-      <button class="film-card__controls-item button film-card__controls-item--favorite ${isActive(isFavorite)}">Mark as favorite</button>
+    ${watchlistButton}
+    ${historyButton}
+    ${favoritesButton}
     </form>
   </article>`
   );
@@ -52,9 +59,26 @@ export default class FilmCard extends AbstractComponent {
     return creatFilmCardTemplate(this._card);
   }
 
+
   setOpenFilmDetailsHandler(handler) {
-    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
-    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
-    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
+    this.getElement().querySelectorAll(`.film-card__poster, .film-card__title, .film-card__comments`)
+      .forEach((element) => {
+        element.addEventListener(`click`, handler);
+      });
+  }
+
+  setAddToWatchlistClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, handler);
+  }
+
+  setMarkAsWatchedClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, handler);
+  }
+
+  setMarkAsFavoriteClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, handler);
   }
 }
