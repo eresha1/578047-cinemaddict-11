@@ -1,5 +1,6 @@
 import {getFormatDuration} from '../utils/common.js';
 import AbstractComponent from "./abstract-component.js";
+import moment from "moment";
 
 
 const createButtonMarkup = (name, title, isActive = false) => {
@@ -8,20 +9,8 @@ const createButtonMarkup = (name, title, isActive = false) => {
   );
 };
 const creatFilmCardTemplate = (card) => {
-  const {
-    title,
-    rating,
-    dateRelease,
-    duration,
-    genreFirst,
-    poster,
-    shortDescription,
-    commentsCount,
-    isAtWatchlist,
-    isFavorite,
-    isWatched
-  } = card;
-  const year = dateRelease.getFullYear();
+  const {title, rating, dateRelease, duration, genreFirst, poster, shortDescription, commentsCount, isAtWatchlist, isFavorite, isWatched} = card;
+  const year = moment(dateRelease).format(`YYYY`);
   const formatDuration = getFormatDuration(duration);
 
   const watchlistButton = createButtonMarkup(`add-to-watchlist`, `Add to watchlist`, !isAtWatchlist);

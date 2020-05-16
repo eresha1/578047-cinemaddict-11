@@ -1,8 +1,9 @@
-import {MONTH_NAMES} from '../const.js';
 import {getFormatDuration} from '../utils/common.js';
 import AbstractSmartComponent from "./abstract-smart-component";
 import CommentsComponent from './comments.js';
 import {createElement, render, RenderPosition} from '../utils/render.js';
+import moment from "moment";
+
 const createGenresnMarkup = (genres) => {
   return genres.map((genre) => {
     return (
@@ -21,8 +22,7 @@ const createButtonMarkup = (name, text, isChecked = true) => {
 const creatFilmDetailsCardTemplate = (bigCard) => {
   const {title, originalTitle, poster, rating, producer, writers, actors, countries, genres, duration, description, dateRelease, ageRating, isFavorite, isWatched, isAtWatchlist} = bigCard;
 
-  const date = `${dateRelease.getDate()} ${MONTH_NAMES[dateRelease.getMonth()]}`;
-  const year = dateRelease.getFullYear();
+  const release = moment(dateRelease).format(`D MMMM YYYY`);
 
   const formatDuration = getFormatDuration(duration);
 
@@ -71,7 +71,7 @@ const creatFilmDetailsCardTemplate = (bigCard) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${date} ${year}</td>
+                <td class="film-details__cell">${release}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
@@ -88,22 +88,18 @@ const creatFilmDetailsCardTemplate = (bigCard) => {
                 </td>
               </tr>
             </table>
-
             <p class="film-details__film-description">
               ${description}
             </p>
           </div>
         </div>
-
         <section class="film-details__controls">
         ${addToWatchlistButton}
         ${alreadyWatchedtButton}
         ${addToFavoritesButton}
         </section>
       </div>
-
       <div class="form-details__bottom-container">
-
       </div>
     </form>
   </section>`
