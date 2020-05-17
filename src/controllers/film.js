@@ -89,8 +89,9 @@ export default class FilmController {
   _openFilmDetails() {
     bodyContainer.classList.add(`hide-overflow`);
     bodyContainer.appendChild(this._filmDetailsComponent.getElement());
-    // render(bodyContainer, this._filmDetailsComponent, RenderPosition.BEFOREEND);
     document.addEventListener(`keydown`, this._escPressHandler);
+
+    this._onViewChange();
     this._mode = Mode.EDIT;
   }
 
