@@ -1,22 +1,21 @@
-const getTimeFormat = (value) => {
-  return value < 10 ? `0${value}` : String(value);
-};
+import moment from "moment";
 
 export const getFormatCommentDate = () => {
   const date = new Date();
-  const days = getTimeFormat(date.getDate());
-  const months = getTimeFormat(date.getMonth());
-  const years = getTimeFormat(date.getFullYear());
-  const hours = getTimeFormat(date.getHours());
-  const minutes = getTimeFormat(date.getMinutes());
-
-  return `${years}/${months}/${days} ${hours}:${minutes}`;
+  return moment(date).format(`YYYY/MM/DD HH:mm`);
 };
 
 export const convertHours = (duration) => Math.floor(duration / 60);
 export const convertMinutes = (duration) => duration % 60;
 
 export const getFormatDuration = (duration) => {
-  return `${convertHours(duration)}h ${convertMinutes(duration)}m`;
+  return moment.utc(moment.duration(duration, `minutes`).asMilliseconds()).format(`H[h] mm[m]`);
 };
 
+export const getFormatReleaseDate = (dateRelease) => {
+  return moment(dateRelease).format(`YYYY`);
+};
+
+export const getFullFormatReleaseDate = (dateRelease) => {
+  return moment(dateRelease).format(`D MMMM YYYY`);
+};
