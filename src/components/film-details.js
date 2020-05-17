@@ -1,8 +1,7 @@
-import {getFormatDuration} from '../utils/common.js';
+import {getFormatDuration, getFullFormatReleaseDate} from '../utils/common.js';
 import AbstractSmartComponent from "./abstract-smart-component";
 import CommentsComponent from './comments.js';
 import {createElement, render, RenderPosition} from '../utils/render.js';
-import moment from "moment";
 
 const createGenresnMarkup = (genres) => {
   return genres.map((genre) => {
@@ -22,7 +21,7 @@ const createButtonMarkup = (name, text, isChecked = true) => {
 const creatFilmDetailsCardTemplate = (bigCard) => {
   const {title, originalTitle, poster, rating, producer, writers, actors, countries, genres, duration, description, dateRelease, ageRating, isFavorite, isWatched, isAtWatchlist} = bigCard;
 
-  const release = moment(dateRelease).format(`D MMMM YYYY`);
+  const release = getFullFormatReleaseDate(dateRelease);
 
   const formatDuration = getFormatDuration(duration);
 
@@ -113,10 +112,13 @@ export default class FilmDetails extends AbstractSmartComponent {
 
     this._comments = new CommentsComponent(bigCard, this._onDataChange);
 
+    this._isFavorite = bigCard.isFavorite;
+    this._isAtWatchlist = bigCard.isAtWatchlist;
+    this._isWatched = bigCard.isWatched;
+
     this._closeFilmDetailsHandler = null;
-    this._addToWatchlistClickHandler = null;
-    this._addWatchedClickHandler = null;
-    this._addToFavoriteClickHandler = null;
+
+    this._subscribeOnEvents();
   }
 
   getElement() {
@@ -133,45 +135,31 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setCloseFilmDetailsHandler(this._closeFilmDetailsHandler);
-    this.setAddToWatchlistClickHandler(this._addToWatchlistClickHandler);
-    this.setMarkAsWatchedClickHandler(this._addWatchedClickHandler);
-    this.setMarkAsFavoriteClickHandler(this._addToFavoriteClickHandler);
+    this._subscribeOnEvents();
   }
 
   rerender() {
     super.rerender();
   }
 
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, () => {
+        this._isAtWatchlist = !this._isAtWatchlist;
+      });
+    element.querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, () => {
+        this._isWatched = !this._isWatched;
+      });
+    element.querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, () => {
+      this._isFavorite = !this._isFavorite;
+    });
+  }
+
   setCloseFilmDetailsHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
     this._closeFilmDetailsHandler = handler;
   }
-
-  setAddToWatchlistClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, handler);
-    this._addToWatchlistClickHandler = handler;
-  }
-
-  setMarkAsWatchedClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, handler);
-    this._addWatchedClickHandler = handler;
-  }
-
-  setMarkAsFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, handler);
-    this._addToFavoriteClickHandler = handler;
-  }
-
-  // _subscribeOnEvents() {
-  //   const element = this.getElement();
-  //   element.querySelector(`.film-details__emoji-list`)
-  //     .addEventListener(`change`, (evt) => {
-  //       this._newComment.emoji = evt.target.value;
-  //       this.rerender();
-  //     });
-  // }
-
 }

@@ -1,6 +1,5 @@
-import {getFormatDuration} from '../utils/common.js';
+import {getFormatDuration, getFormatReleaseDate} from '../utils/common.js';
 import AbstractComponent from "./abstract-component.js";
-import moment from "moment";
 
 
 const createButtonMarkup = (name, title, isActive = false) => {
@@ -10,7 +9,8 @@ const createButtonMarkup = (name, title, isActive = false) => {
 };
 const creatFilmCardTemplate = (card) => {
   const {title, rating, dateRelease, duration, genreFirst, poster, shortDescription, commentsCount, isAtWatchlist, isFavorite, isWatched} = card;
-  const year = moment(dateRelease).format(`YYYY`);
+
+  const year = getFormatReleaseDate(dateRelease);
   const formatDuration = getFormatDuration(duration);
 
   const watchlistButton = createButtonMarkup(`add-to-watchlist`, `Add to watchlist`, !isAtWatchlist);
@@ -47,7 +47,6 @@ export default class FilmCard extends AbstractComponent {
   getTemplate() {
     return creatFilmCardTemplate(this._card);
   }
-
 
   setOpenFilmDetailsHandler(handler) {
     this.getElement().querySelectorAll(`.film-card__poster, .film-card__title, .film-card__comments`)

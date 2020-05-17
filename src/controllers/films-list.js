@@ -83,15 +83,21 @@ export default class FilmsListController {
     }
 
     render(filmsContainer, this._filmsComponent, RenderPosition.BEFOREEND);
+    // render(this._filmsComponent.getElement(), this._filmsListComponent, RenderPosition.BEFOREEND);
 
     this._renderListCard();
+
+    console.log(this._showedFilmsControllers)
+
+
     const listTopRatedComponent = this._listTopRatedComponent;
     const filmsTopContainer = this._filmsTopContainerComponent;
     this._renderListExtra(listTopRatedComponent, filmsTopContainer, SortType.RATING);
-
+    console.log(this._showedFilmsControllersExtra)
     const listCommented = this._listCommentedComponent;
     const filmsCommentContainer = this._filmsCommentContainerComponent;
     this._renderListExtra(listCommented, filmsCommentContainer, SortType.COMMENTS);
+    console.log(this._showedFilmsControllersExtra)
   }
 
   _renderListCard() {
@@ -109,9 +115,10 @@ export default class FilmsListController {
     render(listExtraComponent.getElement(), containerExtraComponent, RenderPosition.BEFOREEND);
 
     const sortedFilmExtra = getSortedFilms(this._films, sortType, 0, ShowingCardsCount.EXTRA_MOVIE_CARD);
+    
     const newfilmExtra = renderFilms(sortedFilmExtra, containerExtraComponent.getElement(), this._onDataChange, this._onViewChange);
 
-    this._showedFilmsControllersExtra = newfilmExtra;
+    this._showedFilmsControllersExtra = this._showedFilmsControllersExtra.concat(newfilmExtra);
   }
 
   _renderShowMoreBtn() {
