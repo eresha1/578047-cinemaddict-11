@@ -26,6 +26,7 @@ export default class FilmController {
   }
 
   render(film) {
+    this._film = film;
     const oldFilmCardComponent = this._filmCardComponent;
     const oldFilmDetalesComponent = this._filmDetailsComponent;
 
@@ -95,11 +96,11 @@ export default class FilmController {
     this._mode = Mode.EDIT;
   }
 
-  _closeFilmDetails(film) {
-    this._onDataChange(film, Object.assign({}, film, {
+  _closeFilmDetails() {
+    this._onDataChange(this._film, Object.assign({}, this._film, {
       isWatched: this._filmDetailsComponent._isWatched,
       isFavorite: this._filmDetailsComponent._isFavorite,
-      _isAtWatchlist: this._filmDetailsComponent.isAtWatchlist
+      isAtWatchlist: this._filmDetailsComponent._isAtWatchlist
     }));
     bodyContainer.classList.remove(`hide-overflow`);
     bodyContainer.removeChild(this._filmDetailsComponent.getElement());

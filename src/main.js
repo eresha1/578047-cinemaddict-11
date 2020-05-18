@@ -5,6 +5,8 @@ import StatisticComponent from './components/statistic.js';
 // import FilmsComponent from './components/films.js';
 import FilmsListController from './controllers/films-list.js';
 
+import MoviesModel from "./models/movies.js";
+
 import {generateFilters} from './utils/filters.js';
 import {generateStatistics} from './utils/statistic.js';
 import {render, RenderPosition} from './utils/render.js';
@@ -13,6 +15,8 @@ import {CardCount} from './utils/../const.js';
 import {generateCards} from './mock/film.js';
 
 const cards = generateCards(CardCount.ALL);
+const moviesModel = new MoviesModel();
+moviesModel.setMovies(cards);
 const filters = generateFilters(cards);
 const moviesInside = cards.length;
 const stats = generateStatistics(cards);
@@ -31,7 +35,7 @@ render(mainElement, new StatisticComponent(stats), RenderPosition.AFTERBEGIN);
 // const filmsComponent = new FilmsComponent();
 // render(mainElement, filmsComponent, RenderPosition.BEFOREEND);
 
-const filmsListController = new FilmsListController(mainElement);
+const filmsListController = new FilmsListController(mainElement, moviesModel);
 
 filmsListController.render(cards);
 

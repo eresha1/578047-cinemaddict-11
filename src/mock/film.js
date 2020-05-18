@@ -127,6 +127,7 @@ const generateCard = () => {
   const dateRelease = generateRandomDate();
 
   return {
+    id: String(new Date() + Math.random()),
     title,
     originalTitle,
     rating: getRating(MaxCount.RATING),
