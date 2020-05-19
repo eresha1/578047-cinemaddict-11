@@ -23,6 +23,8 @@ export default class FilmController {
     this._escPressHandler = this._escPressHandler.bind(this);
     this._closeFilmDetails = this._closeFilmDetails.bind(this);
     this._openFilmDetails = this._openFilmDetails.bind(this);
+
+    this._film = null;
   }
 
   render(film) {
@@ -78,6 +80,7 @@ export default class FilmController {
   destroy() {
     remove(this._filmDetailsComponent);
     remove(this._filmCardComponent);
+    document.removeEventListener(`keydown`, this._escPressHandler);
   }
 
   _escPressHandler(evt) {

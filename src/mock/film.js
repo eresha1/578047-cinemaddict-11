@@ -145,8 +145,8 @@ const generateCard = () => {
     writers: getRandomQuantityElements(teamFilm.SCREENWRITERS, MinCount.WRITERS, MaxCount.WRITERS, `, `),
     actors: getRandomQuantityElements(teamFilm.ACTORS, MinCount.ACTORS, MaxCount.ACTORS, `, `),
     countries: getRandomArrayItem(COUNTRIES),
+    isWatchlist: generateRandomBoolean(),
     isFavorite: generateRandomBoolean(),
-    isAtWatchlist: generateRandomBoolean(),
     isWatched: generateRandomBoolean()
   };
 };
