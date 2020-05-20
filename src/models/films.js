@@ -31,7 +31,7 @@ export default class Films {
     this._callHandlers(this._filterChangeHandlers);
   }
 
-  updateFilm(id, film) {
+  updateFilms(id, film) {
     const index = this._films.findIndex((it) => it.id === id);
 
     if (index === -1) {
