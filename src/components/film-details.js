@@ -1,5 +1,6 @@
 import {getFormatDuration, getFullFormatReleaseDate} from '../utils/common.js';
-import AbstractSmartComponent from "./abstract-smart-component";
+// import AbstractSmartComponent from "./abstract-smart-component";
+import AbstractComponent from "./abstract-component";
 import CommentsComponent from './comments.js';
 import {createElement, render, RenderPosition} from '../utils/render.js';
 
@@ -105,7 +106,7 @@ const creatFilmDetailsCardTemplate = (bigCard) => {
   );
 };
 
-export default class FilmDetails extends AbstractSmartComponent {
+export default class FilmDetails extends AbstractComponent {
   constructor(bigCard) {
     super();
     this._bigCard = bigCard;
@@ -133,14 +134,14 @@ export default class FilmDetails extends AbstractSmartComponent {
     return creatFilmDetailsCardTemplate(this._bigCard);
   }
 
-  recoveryListeners() {
-    this.setCloseFilmDetailsHandler(this._closeFilmDetailsHandler);
-    this._subscribeOnEvents();
-  }
+  // recoveryListeners() {
+  //   this.setCloseFilmDetailsHandler(this._closeFilmDetailsHandler);
+  //   this._subscribeOnEvents();
+  // }
 
-  rerender() {
-    super.rerender();
-  }
+  // rerender() {
+    // super.rerender();
+  // }
 
   _subscribeOnEvents() {
     const element = this.getElement();
