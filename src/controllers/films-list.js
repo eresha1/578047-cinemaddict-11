@@ -6,7 +6,7 @@ import NoFilmsComponent from '../components/no-films.js';
 import FilmsContainerComponent from '../components/films-container.js';
 import SortingComponent, {SortType} from "../components/sorting.js";
 
-import FilmController from '../controllers/film.js';
+import FilmController from './film.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {ShowingCardsCount} from '../const.js';
 
@@ -162,9 +162,10 @@ export default class FilmsListController {
 
   _onDataChange(oldData, newData) {
     const isSuccess = this._filmsModel.updateFilms(oldData.id, newData);
-
     if (isSuccess) {
-      this._showedFilmsControllers.find((film) => film._filmCardComponent._card === oldData).render(newData);
+      this._showedFilmsControllers.find((elem) => elem._filmCardComponent._card === oldData).render(newData);
+      console.log(oldData) 
+      console.log(newData) 
     }
   }
 

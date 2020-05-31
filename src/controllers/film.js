@@ -45,7 +45,7 @@ export default class FilmController {
     this._filmCardComponent.setAddToWatchlistClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(film, Object.assign({}, film, {
-        isAtWatchlist: !film.isAtWatchlist
+        isWatchlist: !film.isWatchlist
       }));
     });
 
@@ -103,7 +103,7 @@ export default class FilmController {
     this._onDataChange(this._film, Object.assign({}, this._film, {
       isWatched: this._filmDetailsComponent._isWatched,
       isFavorite: this._filmDetailsComponent._isFavorite,
-      isAtWatchlist: this._filmDetailsComponent._isAtWatchlist
+      isWatchlist: this._filmDetailsComponent._isWatchlist
     }));
     bodyContainer.classList.remove(`hide-overflow`);
     bodyContainer.removeChild(this._filmDetailsComponent.getElement());

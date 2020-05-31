@@ -39,7 +39,7 @@ const createCommentsMarkup = (comments) => {
   }).join(`\n`);
 };
 
-const creatCommentsTemplate = (card, options = {}) => {
+const creatCommentsTemplate = (card, options) => {
   const {comments} = card;
   const {newComment} = options;
 
@@ -75,7 +75,6 @@ export default class Comments extends AbstractSmartComponent {
     super();
     this._comments = card.comments;
     this._card = card;
-    console.log(this._comments)
     this._newComment = {
       text: ``,
       emoji: ``,
@@ -114,7 +113,6 @@ export default class Comments extends AbstractSmartComponent {
     super.rerender();
   }
 
-    
   setDeleteButtonClickHandler(handler) {
     const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
     deleteButtons.forEach((deleteButton) => deleteButton.addEventListener(`click`, handler));

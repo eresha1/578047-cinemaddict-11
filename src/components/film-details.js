@@ -19,13 +19,13 @@ const createButtonMarkup = (name, text, isChecked = true) => {
 };
 
 const creatFilmDetailsCardTemplate = (bigCard) => {
-  const {title, originalTitle, poster, rating, producer, writers, actors, countries, genres, duration, description, dateRelease, ageRating, isFavorite, isWatched, isAtWatchlist} = bigCard;
+  const {title, originalTitle, poster, rating, producer, writers, actors, countries, genres, duration, description, dateRelease, ageRating, isFavorite, isWatched, isWatchlist} = bigCard;
 
   const release = getFullFormatReleaseDate(dateRelease);
 
   const formatDuration = getFormatDuration(duration);
 
-  const addToWatchlistButton = createButtonMarkup(`watchlist`, `Add to watchlist`, isAtWatchlist);
+  const addToWatchlistButton = createButtonMarkup(`watchlist`, `Add to watchlist`, isWatchlist);
   const alreadyWatchedtButton = createButtonMarkup(`watched`, `Already watched`, isWatched);
   const addToFavoritesButton = createButtonMarkup(`favorite`, `Add to favorites`, isFavorite);
 
@@ -113,7 +113,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._comments = new CommentsComponent(bigCard, this._onDataChange);
 
     this._isFavorite = bigCard.isFavorite;
-    this._isAtWatchlist = bigCard.isAtWatchlist;
+    this._isWatchlist = bigCard.isWatchlist;
     this._isWatched = bigCard.isWatched;
 
     this._closeFilmDetailsHandler = null;
