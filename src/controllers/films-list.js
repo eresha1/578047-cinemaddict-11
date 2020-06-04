@@ -119,9 +119,9 @@ export default class FilmsListController {
 
     const sortedFilmExtra = getSortedFilms(films, sortType, 0, ShowingCardsCount.EXTRA_MOVIE_CARD);
 
-    const newfilmExtra = renderFilms(sortedFilmExtra, containerExtraComponent.getElement(), this._onDataChange, this._onViewChange);
+    const newFilmExtra = renderFilms(sortedFilmExtra, containerExtraComponent.getElement(), this._onDataChange, this._onViewChange);
 
-    this._showedFilmsControllersExtra = [].concat(newfilmExtra);
+    this._showedFilmsControllersExtra = [].concat(newFilmExtra);
   }
 
   _renderShowMoreBtn() {
@@ -164,8 +164,8 @@ export default class FilmsListController {
     const isSuccess = this._filmsModel.updateFilms(oldData.id, newData);
     if (isSuccess) {
       this._showedFilmsControllers.find((elem) => elem._filmCardComponent._card === oldData).render(newData);
-      // console.log(oldData) 
-      // console.log(newData) 
+      // console.log(oldData)
+      // console.log(newData)
     }
   }
 
@@ -188,3 +188,4 @@ export default class FilmsListController {
     this._renderShowMoreBtn();
   }
 }
+

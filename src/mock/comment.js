@@ -33,6 +33,7 @@ const COMMENTS_TEXTS = [
 
 const generateComment = () => {
   return {
+    id: String(new Date() + Math.random()),
     text: getRandomArrayItem(COMMENTS_TEXTS),
     author: getRandomArrayItem(COMMENTS_AUTORS),
     emoji: getRandomArrayItem(COMMENTS_EMODJIES),
@@ -44,4 +45,4 @@ const generateComments = (count) => {
   return new Array(count).fill(``).map(generateComment);
 };
 
-export {generateComment, generateComments, COMMENTS_EMODJIES};
+export {generateComments, COMMENTS_EMODJIES};

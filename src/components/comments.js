@@ -39,8 +39,7 @@ const createCommentsMarkup = (comments) => {
   }).join(`\n`);
 };
 
-const creatCommentsTemplate = (card, options) => {
-  const {comments} = card;
+const creatCommentsTemplate = (comments, options) => {
   const {newComment} = options;
 
   const currentEmoji = `${newComment.emoji}` ? `<img src="images/emoji/${newComment.emoji}.png" width="55" height="55" alt="emoji-${newComment.emoji}">` : ``;
@@ -71,10 +70,9 @@ const creatCommentsTemplate = (card, options) => {
 };
 
 export default class Comments extends AbstractSmartComponent {
-  constructor(card) {
+  constructor(comments) {
     super();
-    this._comments = card.comments;
-    this._card = card;
+    this._comments = comments;
     this._newComment = {
       text: ``,
       emoji: ``,
@@ -82,19 +80,19 @@ export default class Comments extends AbstractSmartComponent {
       // date: null,
     };
 
-    this._subscribeOnEvents();
-    // this._deleteCommentsButtonClickHandler = null;
+    this._renderNewComment();
+    this._deleteCommentsButtonClickHandler = null;
 
   }
 
   getTemplate() {
-    return creatCommentsTemplate(this._card, {
+    return creatCommentsTemplate(this._comments, {
       newComment: this._newComment
     });
   }
 
   recoveryListeners() {
-    this._subscribeOnEvents();
+    this._renderNewComment();
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
   }
 
@@ -119,7 +117,7 @@ export default class Comments extends AbstractSmartComponent {
     this._deleteButtonClickHandler = handler;
   }
 
-  _subscribeOnEvents() {
+  _renderNewComment() {
     const element = this.getElement();
     element.querySelector(`.film-details__emoji-list`)
       .addEventListener(`change`, (evt) => {

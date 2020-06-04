@@ -24,9 +24,9 @@ export default class Films {
   }
 
   setFilter(filterType) {
-    // if (this._activeFilterType === filterType) {
-    //   return;
-    // }
+    if (this._activeFilterType === filterType) {
+      return;
+    }
     this._activeFilterType = filterType;
     this._callHandlers(this._filterChangeHandlers);
   }

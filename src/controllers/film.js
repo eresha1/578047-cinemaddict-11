@@ -1,10 +1,12 @@
 import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsComponent from '../components/film-details.js';
+import CommentController from '../controllers/comment.js';
+import CommentsModel from '../models/comments.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 
 const Mode = {
   DEFAULT: `default`,
-  EDIT: `edit`,
+  POPUP: `popup`,
 };
 
 const bodyContainer = document.querySelector(`body`);
@@ -18,6 +20,9 @@ export default class FilmController {
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+
+
+    this._commentsModel = new CommentsModel();
     this._mode = Mode.DEFAULT;
 
     this._escPressHandler = this._escPressHandler.bind(this);
@@ -25,10 +30,12 @@ export default class FilmController {
     this._openFilmDetails = this._openFilmDetails.bind(this);
 
     this._film = null;
+    this._commentController = null;
   }
 
   render(film) {
     this._film = film;
+    this._commentsModel.setComments(this._film.comments);
     const oldFilmCardComponent = this._filmCardComponent;
     const oldFilmDetalesComponent = this._filmDetailsComponent;
 
@@ -94,9 +101,9 @@ export default class FilmController {
     bodyContainer.classList.add(`hide-overflow`);
     bodyContainer.appendChild(this._filmDetailsComponent.getElement());
     document.addEventListener(`keydown`, this._escPressHandler);
-
+    this._renderComments();
     this._onViewChange();
-    this._mode = Mode.EDIT;
+    this._mode = Mode.POPUP;
   }
 
   _closeFilmDetails() {
@@ -109,5 +116,11 @@ export default class FilmController {
     bodyContainer.removeChild(this._filmDetailsComponent.getElement());
     document.removeEventListener(`keydown`, this._escPressHandler);
     this._mode = Mode.DEFAULT;
+  }
+
+  _renderComments() {
+    const commentsContainerElement = this._filmDetailsComponent.getElement().querySelector(`.form-details__bottom-container`);
+    this._commentController = new CommentController(commentsContainerElement, this._commentsModel);
+    this._commentController.render();
   }
 }

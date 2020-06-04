@@ -20,7 +20,7 @@ const createButtonMarkup = (name, text, isChecked = true) => {
 };
 
 const creatFilmDetailsCardTemplate = (bigCard) => {
-  const {title, originalTitle, poster, rating, producer, writers, actors, countries, genres, duration, description, dateRelease, ageRating, isFavorite, isWatched, isWatchlist} = bigCard;
+  const {title, originalTitle, poster, rating, producer, writers, actors, countries, genres, duration, description, dateRelease, ageRating, isWatchlist, isFavorite, isWatched} = bigCard;
 
   const release = getFullFormatReleaseDate(dateRelease);
 
@@ -111,7 +111,8 @@ export default class FilmDetails extends AbstractComponent {
     super();
     this._bigCard = bigCard;
 
-    this._comments = new CommentsComponent(bigCard, this._onDataChange);
+    // this._comments = new CommentsComponent(bigCard);
+    // this._comments = new CommentsComponent(bigCard);
 
     this._isFavorite = bigCard.isFavorite;
     this._isWatchlist = bigCard.isWatchlist;
@@ -125,7 +126,9 @@ export default class FilmDetails extends AbstractComponent {
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
-      render(this._element.querySelector(`.form-details__bottom-container`), this._comments, RenderPosition.AFTERBEGIN);
+
+
+      // render(this._element.querySelector(`.form-details__bottom-container`), this._comments, RenderPosition.AFTERBEGIN);
     }
     return this._element;
   }
@@ -140,7 +143,7 @@ export default class FilmDetails extends AbstractComponent {
   // }
 
   // rerender() {
-    // super.rerender();
+  //   super.rerender();
   // }
 
   _subscribeOnEvents() {
@@ -148,7 +151,7 @@ export default class FilmDetails extends AbstractComponent {
 
     element.querySelector(`.film-details__control-label--watchlist`)
       .addEventListener(`click`, () => {
-        this._isAtWatchlist = !this._isAtWatchlist;
+        this._isWatchlist = !this._isWatchlist;
       });
     element.querySelector(`.film-details__control-label--watched`)
       .addEventListener(`click`, () => {

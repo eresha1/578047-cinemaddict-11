@@ -4,6 +4,7 @@ const createFilterMarkup = (filter) => {
   const {name, count, checked} = filter;
 
   const itemCount = name === `All movies` ? `` : `<span class="main-navigation__item-count">${count}</span>`;
+  
   return (
     `<a href="#${name.toLowerCase().split(` `, 1)}" id="${name}"  class="main-navigation__item ${checked ? `main-navigation__item--active` : ``}">${name}
     ${itemCount}
